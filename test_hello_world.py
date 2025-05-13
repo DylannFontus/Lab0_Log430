@@ -1,5 +1,5 @@
 # This code defines a class named Hello
-from HelloWorld import display_message
+from helloworld import display_message
 
 def test_display_message():
     assert display_message() == "Hello, World!"
