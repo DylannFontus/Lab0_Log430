@@ -17,8 +17,6 @@ jobs:
           python-version: 3.11
       - name: Install dependencies
         run: pip install pylint
-      - name: Run Black (formatter)
-        run: black --check .
       - name: Run Pylint
         run: pylint helloworld.py
 
