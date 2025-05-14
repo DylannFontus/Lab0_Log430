@@ -33,7 +33,7 @@ jobs:
         run: |
           pip install pytest
       - name: Run tests
-        run: pytest tests_helloworld.py
+        run: pytest test_hello_world.py
 
   build-and-push:
     runs-on: ubuntu-latest
@@ -52,5 +52,4 @@ jobs:
         with:
           context: .
           push: true
-          tags: docker.io/cedricbosseets/hello-world:latest
-          
+          tags: docker.io/dylannordyt/helloworld:latest
