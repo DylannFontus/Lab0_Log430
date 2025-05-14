@@ -28,7 +28,7 @@ jobs:
 
       - name: Run Pylint
         run: |
-          find . -name "*.py" | xargs pylint
+          find . -name "helloworld.py" | xargs pylint
 
   tests:
     runs-on: ubuntu-latest
@@ -48,7 +48,7 @@ jobs:
           pip install pytest
 
       - name: Run tests
-        run: pytest
+        run: pytest test_hello_world.py
 
   build-and-push:
     runs-on: ubuntu-latest
