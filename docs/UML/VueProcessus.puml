@@ -1,0 +1,15 @@
+#DSS Ajouter Cours
+
+@startuml DSS CU01a Ajouter Cours
+title DSS CU01a Ajouter Cours
+skinparam style strictuml
+
+actor ":Enseignant" as E
+participant ":Système" as S
+
+E -> S: allRemoteForTeacher(teacher_id : string)
+E <<-- S: la liste des groupes-cours qu'enseigne l'enseignant
+E -> S: add(teacher_id : string, cours_id : string, prealable : string, titre : string)
+E <<-- S: informations du cours et liste des étudiants qui participent
+
+@enduml

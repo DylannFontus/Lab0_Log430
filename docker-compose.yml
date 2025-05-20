@@ -1,6 +1,15 @@
 services:
   web:
     build: .
+    restart: unless-stopped
     container_name: mon-api-container
     #ports:
     #  - "5000:5000"
+  db:
+    image: mysql:9.3
+    restart: unless-stopped
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}

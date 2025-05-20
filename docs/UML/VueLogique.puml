@@ -1,0 +1,51 @@
+@startuml
+
+class Magasin {
+    - nom: str
+    - adresse: str
+    - produits: List[Produit]
+    + ajouter_produit(produit: Produit): void
+    + retirer_produit(produit: Produit): void
+    + lister_produits(): List[Produit]
+}
+
+class Produit {
+    - nom: str
+    - prix: float
+    - quantite: int
+    + mettre_a_jour_quantite(qte: int): void
+    + afficher_info(): str
+}
+
+class Ventes {
+    - id: int
+    - date: date
+    - produits_vendus: List[Produit]
+    - utilisateur: Utilisateurs
+    + ajouter_produit(produit: Produit): void
+    + calculer_total(): float
+}
+
+class Utilisateurs {
+    - id: int
+    - nom: str
+    - email: str
+    + acheter(vente: Ventes): void
+}
+
+class Categories {
+    - nom: str
+    - description: str
+    - produits: List[Produit]
+    + ajouter_produit(produit: Produit): void
+    + retirer_produit(produit: Produit): void
+}
+
+Magasin "1" o-- "*" Produit : contient
+Magasin "1" o-- "*" Categories : possède
+Categories "1" o-- "*" Produit : regroupe
+Ventes "1" o-- "*" Produit : vend
+Ventes "*" o-- "1" Utilisateurs : effectué par
+Produit "*" o-- "1" Categories : appartient à
+
+@enduml

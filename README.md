@@ -44,5 +44,5 @@ Voici les étapes du projet :
 15. J'ai push le projet et etl'intégration s'est terminé avec succès
 
 ## Pipeline réussi
-![Image de la pipeline terminé](Images/PipelineCICDRéussi.png)
-![Image du processus complet](Images/PipelineCICDRéussi2.png)
+![Image de la pipeline terminé](Images/Lab0/PipelineCICDRéussi.png)
+![Image du processus complet](Images/Lab0/PipelineCICDRéussi2.png)
