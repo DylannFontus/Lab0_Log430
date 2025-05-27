@@ -33,19 +33,8 @@ class Utilisateurs {
     + acheter(vente: Ventes): void
 }
 
-class Categories {
-    - nom: str
-    - description: str
-    - produits: List[Produit]
-    + ajouter_produit(produit: Produit): void
-    + retirer_produit(produit: Produit): void
-}
-
 Magasin "1" o-- "*" Produit : contient
-Magasin "1" o-- "*" Categories : possède
-Categories "1" o-- "*" Produit : regroupe
 Ventes "1" o-- "*" Produit : vend
 Ventes "*" o-- "1" Utilisateurs : effectué par
-Produit "*" o-- "1" Categories : appartient à
 
 @enduml

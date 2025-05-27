@@ -1,8 +1,9 @@
 class Produit:
-    def __init__(self, identifiant, nom, categorie):
+    def __init__(self, identifiant, nom, categorie, prix):
         self._identifiant = identifiant
         self._nom = nom
         self._categorie = categorie
+        self._prix = prix
 
     # Getter et Setter pour identifiant
     def get_identifiant(self):
@@ -25,5 +26,14 @@ class Produit:
     def set_categorie(self, categorie):
         self._categorie = categorie
 
+    # Getter et Setter pour prix
+    def get_prix(self):
+        return self._prix
+    
+    def set_prix(self, prix):
+        if prix < 0:
+            raise ValueError("Le prix ne peut pas être négatif.")
+        self._prix = prix
+
     def __str__(self):
-        return f"Produit(id={self._identifiant}, nom='{self._nom}', categorie='{self._categorie}')"
+        return f"Produit(id={self._identifiant}, nom='{self._nom}', categorie='{self._categorie}', prix='{self._prix}')"
