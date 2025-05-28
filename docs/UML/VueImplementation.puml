@@ -1,0 +1,44 @@
+@startuml
+
+package models {
+    class Produit
+    class Vente
+    class VenteProduit
+}
+
+package repositories {
+    class ProduitRepository
+    class VenteRepository
+}
+
+package services {
+    class Magasin
+}
+
+package db {
+    class session
+}
+
+package cli {
+    class main
+}
+
+' Relations ORM
+ProduitRepository --> Produit
+VenteRepository --> Vente
+VenteRepository --> VenteProduit
+
+' Service utilise les repositories
+Magasin --> ProduitRepository
+Magasin --> VenteRepository
+
+' CLI utilise le service et le repo produit
+main --> Magasin
+main --> ProduitRepository
+
+' Session DB utilisée partout
+ProduitRepository --> session
+VenteRepository --> session
+Magasin --> session
+
+@enduml

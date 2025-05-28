@@ -46,3 +46,124 @@ Voici les étapes du projet :
 ## Pipeline réussi
 ![Image de la pipeline terminé](Images/Lab0/PipelineCICDRéussi.png)
 ![Image du processus complet](Images/Lab0/PipelineCICDRéussi2.png)
+
+# Lab1_Log430
+## Instructions d’exécution
+
+### Prérequis
+
+- **Python 3.8+**
+- **Docker** et **docker-compose**
+- **MySQL** (utilisé via Docker)
+- **pip** (gestionnaire de paquets Python)
+
+### 1. Lancer l’application avec Docker Compose
+
+```bash
+docker compose up --build
+```
+
+Cela va :
+- Construire l’image de l’application Python
+- Lancer un conteneur MySQL avec la base `magasin`
+- Lancer l’application CLI dans un conteneur dédié
+
+### 2. Utilisation de l’application
+
+Une fois le conteneur démarré, le menu CLI s’affiche :
+
+```
+--- Menu POS ---
+1. Rechercher un produit
+2. Enregistrer une vente
+3. Annuler une vente
+4. Consulter le stock
+0. Quitter
+```
+
+Suivez les instructions à l’écran pour utiliser les différentes fonctionnalités.
+
+---
+
+## Instructions de test
+
+### 1. Installer les dépendances (hors Docker)
+
+```bash
+pip install mysql-connector-python
+pip install sqlalchemy
+```
+
+### 2. Lancer les tests unitaires
+
+```bash
+pytest
+```
+
+Les tests sont situés dans le dossier `tests/` ou sous forme de fichiers `test_*.py`.
+
+---
+
+## Compilation
+
+Python étant un langage interprété, il n’y a pas de compilation à proprement parler. L’application est lancée directement via :
+
+```bash
+python src/cli/main.py
+```
+
+ou via Docker Compose comme décrit ci-dessus.
+
+---
+
+## Structure du projet
+
+```
+Lab0_Log430/
+├── src/
+│   ├── cli/
+│   │   └── main.py
+│   ├── services/
+│   │   └── Magasin.py
+│   ├── repositories/
+│   │   ├── ProduitRepository.py
+│   │   └── VenteRepository.py
+│   ├── models/
+│   │   ├── Produit.py
+│   │   ├── Ventes.py
+│   │   └── VenteProduit.py
+│   └── db/
+│       ├── session.py
+│       └── init_db.sql
+├── docker-compose.yml
+├── Dockerfile
+├── README.md
+└── tests/
+```
+
+---
+
+## Choix technologiques et justification
+
+- **Python** : langage simple, rapide à prototyper, très utilisé pour les scripts et applications métiers.
+- **SQLAlchemy** : ORM flexible et puissant, facilite l’abstraction de la base de données.
+- **MySQL** : SGBD open-source, robuste, facile à intégrer avec SQLAlchemy et Docker.
+- **Docker & docker-compose** : simplifient le déploiement, l’isolation et la reproductibilité de l’environnement.
+- **pytest** : framework de tests simple et efficace pour Python.
+
+**Résumé des avantages** :
+- Séparation claire des responsabilités (CLI, services, persistance)
+- Facilité de test et de maintenance
+- Déploiement reproductible grâce à Docker
+- Adapté à l’évolution vers des architectures plus complexes
+
+---
+
+## Pipeline CI/CD
+
+Le projet intègre une pipeline CI/CD via GitHub Actions :
+- Linting avec pylint
+- Tests automatiques avec pytest
+- Build et push d’image Docker
+
+---

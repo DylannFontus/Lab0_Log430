@@ -1,0 +1,22 @@
+# ADR 0001 – Choix de la plateforme technologique
+
+## Statut
+Acceptée
+
+## Contexte
+Dans le cadre du développement d’un système de vente en architecture 2-tier, nous devons choisir une plateforme de développement adaptée à un environnement local, simple à mettre en œuvre.
+
+## Décision
+J'ai choisi d’implémenter le projet en **Python**, avec l’ORM **SQLAlchemy**, et **MySQL** comme système de gestion de base de données (SGBD) local.
+
+## Raisons
+- Python est un langage simple, expressif, et rapide à prototyper.
+- SQLAlchemy est un ORM puissant, flexible, et bien intégré à Python.
+- MySQL est un SGBD open-source largement répandu, stable et performant.
+- Le tout est facilement conteneurisable via Docker (MySQL + application Python).
+- Une intégration fluide dans les pipelines CI/CD est possible avec pytest et Docker.
+
+## Conséquences
+- La couche de persistance utilisera SQLAlchemy pour l’abstraction.
+- Le fichier `docker-compose.yml` inclura un service MySQL et un service Python.
+- Les tests automatisés utiliseront `pytest`.

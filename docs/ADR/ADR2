@@ -1,0 +1,25 @@
+# ADR 0002 – Séparation des responsabilités
+
+## Statut
+Acceptée
+
+## Contexte
+Afin de structurer le code de manière claire, maintenable et évolutive, il est essentiel de séparer les différentes responsabilités de l’application (présentation, logique, persistance).
+
+## Décision
+L’architecture de l’application suivra une séparation explicite en trois modules principaux :
+
+1. **Présentation** : Interface en ligne de commande (CLI), gère les interactions utilisateur (affichage, saisie).
+2. **Logique** : Valide les opérations métier (vente, retour, consultation stock).
+3. **Persistance** : Fournit un accès abstrait à la base de données via l’ORM SQLAlchemy.
+
+## Raisons
+- Favorise la lisibilité, la testabilité et la réutilisabilité du code.
+- Permet de modifier ou remplacer une couche sans impacter les autres.
+- Compatible avec les bonnes pratiques de développement logiciel (ex : séparation des préoccupations).
+- Facilite l’évolution vers une architecture distribuée ou multi-niveaux dans les futurs laboratoires.
+
+## Conséquences
+- L’organisation des fichiers sera structurée par module : `/cli`, `/services`, `/db`, `/models`, `/repositories`.
+- Les tests unitaires seront ciblés par couche.
+- Une couche de persistance abstraite sera créée pour éviter le couplage direct au SGBD.

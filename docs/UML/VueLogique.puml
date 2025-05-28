@@ -1,40 +1,63 @@
 @startuml
 
-class Magasin {
-    - nom: str
-    - adresse: str
-    - produits: List[Produit]
-    + ajouter_produit(produit: Produit): void
-    + retirer_produit(produit: Produit): void
-    + lister_produits(): List[Produit]
+package models {
+    class Produit {
+        id: int
+        nom: str
+        categorie: str
+        prix: float
+        quantite_stock: int
+    }
+
+    class Vente {
+        id: int
+        total: float
+        date: datetime
+    }
+
+    class VenteProduit {
+        id: int
+        vente_id: int
+        produit_id: int
+    }
 }
 
-class Produit {
-    - nom: str
-    - prix: float
-    - quantite: int
-    + mettre_a_jour_quantite(qte: int): void
-    + afficher_info(): str
+package repositories {
+    class ProduitRepository {
+        + get_by_id(id)
+        + search(nom, categorie)
+        + get_all()
+        + ajouter_produit(produit)
+        + update_stock(produit_id, quantite)
+        + delete_produit(produit_id)
+    }
+
+    class VenteRepository {
+        + creer_vente(produits, total)
+        + supprimer_vente(vente_id)
+    }
 }
 
-class Ventes {
-    - id: int
-    - date: date
-    - produits_vendus: List[Produit]
-    - utilisateur: Utilisateurs
-    + ajouter_produit(produit: Produit): void
-    + calculer_total(): float
+package services {
+    class Magasin {
+        + effectuer_vente(produit_ids)
+        + annuler_vente(vente_id)
+    }
 }
 
-class Utilisateurs {
-    - id: int
-    - nom: str
-    - email: str
-    + acheter(vente: Ventes): void
-}
+' Relations ORM
+Produit "1" o-- "*" VenteProduit : utilisé dans >
+Vente "1" o-- "*" VenteProduit : contient >
+VenteProduit "*" -- "1" Produit : référence >
+VenteProduit "*" -- "1" Vente : référence >
 
-Magasin "1" o-- "*" Produit : contient
-Ventes "1" o-- "*" Produit : vend
-Ventes "*" o-- "1" Utilisateurs : effectué par
+' Repositories
+ProduitRepository ..> Produit : gère >
+VenteRepository ..> Vente : gère >
+VenteRepository ..> VenteProduit : gère >
+
+' Service
+Magasin ..> ProduitRepository : utilise >
+Magasin ..> VenteRepository : utilise >
 
 @enduml

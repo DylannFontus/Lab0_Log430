@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.8-slim
+FROM python:3.11-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -11,4 +11,4 @@ COPY . .
 EXPOSE 5000
 
 # Define the command to run your application
-CMD ["python", "helloworld.py"]
+CMD ["python", "src/cli/main.py"]

@@ -1,0 +1,21 @@
+@startuml
+node "Poste Utilisateur" as client {
+    artifact "main.py"
+}
+
+node "Serveur Applicatif" as app {
+    artifact "Magasin.py"
+    artifact "ProduitRepository.py"
+    artifact "VenteRepository.py"
+    artifact "Produit.py"
+    artifact "Ventes.py"
+    artifact "VenteProduit.py"
+    artifact "session.py"
+}
+
+database "MySQL\nmagasin" as db
+
+client --> app : CLI / Appels services
+app --> db : Connexion SQLAlchemy
+
+@enduml

@@ -1,15 +1,43 @@
-#DSS Ajouter Cours
+@startuml
 
-@startuml DSS CU01a Ajouter Cours
-title DSS CU01a Ajouter Cours
-skinparam style strictuml
+start
 
-actor ":Enseignant" as E
-participant ":Système" as S
+:main.py démarre;
+:Affichage du menu utilisateur;
 
-E -> S: allRemoteForTeacher(teacher_id : string)
-E <<-- S: la liste des groupes-cours qu'enseigne l'enseignant
-E -> S: add(teacher_id : string, cours_id : string, prealable : string, titre : string)
-E <<-- S: informations du cours et liste des étudiants qui participent
+partition "Choix utilisateur" {
+    :Saisie de l'action;
+    if ("Rechercher un produit") then (oui)
+        :ProduitRepository.search();
+        :Affichage des résultats;
+    else if ("Enregistrer une vente") then (oui)
+        :Lecture des IDs produits;
+        :Magasin.effectuer_vente();
+        :ProduitRepository.get_by_id() pour chaque produit;
+        :Vérification stock et MAJ stock;
+        :VenteRepository.creer_vente();
+        :VenteProduit créé pour chaque produit;
+        :Commit DB;
+        :Affichage confirmation;
+    else if ("Annuler une vente") then (oui)
+        :Lecture ID vente;
+        :Magasin.annuler_vente();
+        :Récupération des VenteProduit;
+        :ProduitRepository.get_by_id() pour chaque produit;
+        :Restauration stock;
+        :VenteRepository.supprimer_vente();
+        :Commit DB;
+        :Affichage confirmation;
+    else if ("Consulter le stock") then (oui)
+        :ProduitRepository.get_all();
+        :Affichage stock;
+    else if ("Quitter") then (oui)
+        stop
+    else
+        :Affichage erreur;
+    endif
+}
+
+stop
 
 @enduml

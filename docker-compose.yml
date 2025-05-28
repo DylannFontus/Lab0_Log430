@@ -13,3 +13,30 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
+  mysql:
+    image: mysql:9.3
+    container_name: mysql_magasin
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: magasin
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+  app:
+    build:
+      context: .
+    container_name: pos_app
+    depends_on:
+      - mysql
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["python", "src/cli/main.py"]
+    environment:
+      - PYTHONUNBUFFERED=1
+
+volumes:
+  mysql_data:

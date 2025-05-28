@@ -1,0 +1,27 @@
+@startuml
+
+actor Utilisateur
+actor Gestionnaire
+
+rectangle "Système de Gestion de Magasin" {
+    (Rechercher un produit) as rechercher
+    (Effectuer une vente) as vente
+    (Annuler une vente) as annuler
+    (Consulter le stock) as stock
+    (Ajouter un produit) as ajouter
+    (Supprimer un produit) as supprimer
+}
+
+Utilisateur --> rechercher
+Utilisateur --> vente
+Utilisateur --> stock
+
+Gestionnaire --> ajouter
+Gestionnaire --> supprimer
+Gestionnaire --> annuler
+
+' Associations internes
+vente --> (Mettre à jour stock) : <<include>>
+annuler --> (Restaurer stock) : <<include>>
+
+@enduml
