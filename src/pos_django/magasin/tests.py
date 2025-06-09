@@ -41,7 +41,7 @@ def test_get_only_magasins(mocker, mock_magasins):
 def test_get_magasin_by_id_success(mocker, mock_magasins):
     magasins, mock_qs = mock_magasins
     # Mock get_object_or_404
-    mocker.patch('magasin.services.magasin_service.get_object_or_404', return_value=magasins[0])
+    mocker.patch('magasin.services.MagasinService.get_object_or_404', return_value=magasins[0])
 
     result = get_magasin_by_id(1)
     assert result == magasins[0]
@@ -51,7 +51,7 @@ def test_get_magasin_by_id_raises_404(mocker):
     def raise_404(*args, **kwargs):
         raise Http404()
 
-    mocker.patch('magasin.services.magasin_service.get_object_or_404', side_effect=raise_404)
+    mocker.patch('magasin.services.MagasinService.get_object_or_404', side_effect=raise_404)
 
     with pytest.raises(Http404):
         get_magasin_by_id(999)
@@ -84,7 +84,7 @@ def test_get_produits_par_magasin(mocker):
         MagicMock(produit=MagicMock(id=2, nom="Prod2")),
     ]
     # Patch Stock.objects.filter().select_related() pour retourner mock_stocks
-    mock_filter = mocker.patch('magasin.services.produit_service.Stock.objects.filter')
+    mock_filter = mocker.patch('magasin.services.ProduitService.Stock.objects.filter')
     mock_filter.return_value.select_related.return_value = mock_stocks
 
     result = get_produits_par_magasin(1)
@@ -95,26 +95,26 @@ def test_get_produits_par_magasin(mocker):
 
 def test_rechercher_produits_par_nom_ou_id_with_id(mocker):
     mock_qs = MagicMock()
-    patch_filter = mocker.patch('magasin.services.produit_service.Produit.objects.filter', return_value=mock_qs)
+    patch_filter = mocker.patch('magasin.services.ProduitService.Produit.objects.filter', return_value=mock_qs)
 
-    result = rechercher_produits_par_nom_ou_id("123")
+    result = rechercher_produits_par_nom_ou_id("1")
 
     # Vérifie que filter a été appelé avec le bon Q
-    patch_filter.assert_called_once_with(Q(id=123) | Q(nom__icontains="123"))
+    patch_filter.assert_called_once_with(Q(id=1) | Q(nom__icontains="1"))
     assert result == mock_qs
 
 def test_rechercher_produits_par_nom_ou_id_with_name(mocker):
     mock_qs = MagicMock()
-    patch_filter = mocker.patch('magasin.services.produit_service.Produit.objects.filter', return_value=mock_qs)
+    patch_filter = mocker.patch('magasin.services.ProduitService.Produit.objects.filter', return_value=mock_qs)
 
-    result = rechercher_produits_par_nom_ou_id("abc")
+    result = rechercher_produits_par_nom_ou_id("sdada")
 
-    patch_filter.assert_called_once_with(nom__icontains="abc")
+    patch_filter.assert_called_once_with(nom__icontains="sdada")
     assert result == mock_qs
 
 def test_get_tous_les_produits(mocker):
     mock_qs = MagicMock()
-    patch_all = mocker.patch('magasin.services.produit_service.Produit.objects.all', return_value=mock_qs)
+    patch_all = mocker.patch('magasin.services.ProduitService.Produit.objects.all', return_value=mock_qs)
 
     result = get_tous_les_produits()
 
@@ -123,7 +123,7 @@ def test_get_tous_les_produits(mocker):
 
 def test_mettre_a_jour_produit(mocker):
     mock_produit = MagicMock()
-    patch_get = mocker.patch('magasin.services.produit_service.Produit.objects.get', return_value=mock_produit)
+    patch_get = mocker.patch('magasin.services.ProduitService.Produit.objects.get', return_value=mock_produit)
 
     mettre_a_jour_produit(produit_id=1, nom="ProduitTest", prix=1, description="Test")
 

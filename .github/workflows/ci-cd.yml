@@ -27,7 +27,7 @@ jobs:
 
       - name: Lint code
         run: |
-          pylint $(find src -name "*.py" ! -name "test_*.py") \
+          pylint $(find src -name "*.py" ! -name "tests.py") \
             --load-plugins=pylint_django \
             --fail-under=5.0
 
