@@ -5,10 +5,6 @@ from django.utils.timezone import now, timedelta
 
 @transaction.atomic
 def creer_vente(panier: dict, magasin_id: int) -> float:
-    """
-    Crée une vente à partir du panier.
-    Panier : dict {produit_id (str): quantite (int)}
-    """
     total = 0
     produits_ids = [int(pid) for pid in panier.keys()]
     

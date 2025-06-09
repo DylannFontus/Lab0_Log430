@@ -6,18 +6,15 @@ from .models import Magasin, Produit, Stock, Vente
 
 # Create your views here.
 def home_view(request):
-    """Affiche la page d'accueil."""
     return render(request, 'home.html')
 
 def page_magasins(request):
-    """Affiche la liste des magasins disponibles."""
     print("page_magasins appelée")
     magasins = MagasinService.get_only_magasins()
     print(f"Magasins récupérés : {magasins}")
     return render(request, "magasins.html", {"magasins": magasins})
 
 def page_caisse(request, magasin_id):
-    """Affiche la page principale de la caisse pour un magasin donné."""
     magasin = MagasinService.get_magasin_by_id(magasin_id)
     action = request.GET.get("action")
     afficher_produits = action == "afficher_produits"
@@ -35,7 +32,6 @@ def page_caisse(request, magasin_id):
 
 
 def rechercher_produit(request, magasin_id):
-    """Recherche un produit par son nom ou son identifiant dans un magasin."""
     query = request.GET.get("q", "").strip()
     produits_recherches = []
 
@@ -50,7 +46,6 @@ def rechercher_produit(request, magasin_id):
 
 
 def reapprovisionnement_view(request, magasin_id):
-    """Permet de transférer du stock depuis le centre logistique vers le magasin donné."""
     magasin = MagasinService.get_magasin_by_id(magasin_id)
     centre_logistique = MagasinService.get_centre_logistique()
 
@@ -85,7 +80,6 @@ def reapprovisionnement_view(request, magasin_id):
 
 
 def panier_view(request, magasin_id):
-    """Affiche les produits actuellement dans le panier pour le magasin."""
     magasin = get_object_or_404(Magasin, id=magasin_id)
     if "panier" not in request.session:
         request.session["panier"] = {}
@@ -110,19 +104,16 @@ def panier_view(request, magasin_id):
     return render(request, "panier.html", context)
 
 def liste_ventes(request, magasin_id):
-    """Affiche la liste des ventes pour un magasin donné."""
     ventes = Vente.objects.filter(magasin_id=magasin_id).order_by('-date_heure')
     return render(request, 'vente.html', {'ventes': ventes, 'magasin_id': magasin_id})
 
 
 def annuler_vente(request, magasin_id, vente_id):
-    """Annule une vente spécifique après une requête POST."""
     if request.method == "POST":
         VenteService.annuler_vente(magasin_id, vente_id)
     return redirect('liste_ventes', magasin_id=magasin_id)
 
 def ajouter_au_panier(request, magasin_id):
-    """Ajoute un produit au panier pour un magasin donné."""
     if request.method == "POST":
         produit_id = int(request.POST["produit_id"])
         quantite = int(request.POST["quantite"])
@@ -144,7 +135,6 @@ def ajouter_au_panier(request, magasin_id):
 
 
 def retirer_du_panier(request, magasin_id, produit_id):
-    """Retire un produit du panier."""
     panier = request.session.get("panier", {})
     if str(produit_id) in panier:
         del panier[str(produit_id)]
@@ -156,7 +146,6 @@ def retirer_du_panier(request, magasin_id, produit_id):
 
 
 def afficher_panier(request, magasin_id):
-    """Affiche les détails du panier avec les produits et quantités."""
     panier = request.session.get("panier", {})
     produits = Produit.objects.filter(id__in=panier.keys())
     details = []
@@ -188,7 +177,6 @@ def afficher_panier(request, magasin_id):
 
 
 def finaliser_vente(request, magasin_id):
-    """Finalise la vente en enregistrant les produits du panier."""
     panier = request.session.get("panier", {})
     if not panier:
         messages.warning(request, "Le panier est vide.")
@@ -205,14 +193,12 @@ def finaliser_vente(request, magasin_id):
     return redirect("liste_ventes", magasin_id=magasin_id)
 
 def admin_page(request):
-    """Affiche les entités administratives (hors magasins)."""
     magasins = MagasinService.get_all_magasins()
     entites_admin = [m for m in magasins if m.type != 'magasin']
     return render(request, 'gestion.html', {'entites_admin': entites_admin})
 
 
 def admin_entite(request, magasin_id):
-    """Affiche l'interface appropriée selon le type d'entité."""
     magasin = MagasinService.get_magasin_by_id(magasin_id)
     if magasin.type == 'admin':
         return render(request, 'maison_mere.html', {'magasin': magasin})
@@ -220,7 +206,6 @@ def admin_entite(request, magasin_id):
 
 
 def rapport_ventes(request, magasin_id):
-    """Affiche un rapport des ventes et des stocks."""
     magasin = MagasinService.get_magasin_by_id(magasin_id)
     ventes_par_magasin = VenteService.get_ventes_par_magasin()
     produits_plus_vendus = VenteService.get_produits_les_plus_vendus()
@@ -236,14 +221,12 @@ def rapport_ventes(request, magasin_id):
 
 
 def tableau_de_bord(request, magasin_id):
-    """Affiche le tableau de bord de la maison mère."""
     magasin = Magasin.objects.get(id=magasin_id)
     stats = VenteService.get_dashboard_stats()
     return render(request, 'tableau_de_bord.html', {'magasin': magasin, 'stats': stats})
 
 
 def modifier_produits_depuis_maison_mere(request, magasin_id):
-    """Page de modification des produits depuis la maison mère."""
     produits = ProduitService.get_tous_les_produits()
     return render(request, 'modifier_produits.html', {
         'produits': produits,
@@ -253,7 +236,6 @@ def modifier_produits_depuis_maison_mere(request, magasin_id):
 
 @require_POST
 def modifier_produit(request, produit_id):
-    """Modifie les informations d'un produit."""
     nom = request.POST.get("nom")
     prix = float(request.POST.get("prix"))
     description = request.POST.get("description")
@@ -262,7 +244,6 @@ def modifier_produit(request, produit_id):
 
 
 def approvisionner_magasin(request, centre_logistique_id):
-    """Transfère des produits du centre logistique vers un autre magasin."""
     centre = Magasin.objects.get(id=centre_logistique_id)
     magasins = Magasin.objects.exclude(id=centre_logistique_id)
     produits = Produit.objects.all()
@@ -282,7 +263,7 @@ def approvisionner_magasin(request, centre_logistique_id):
                         )
                         messages_list.append(f"{quantite}x {produit.nom} transféré.")
                     except ValueError as e:
-                        messages_list.append(f"❌ {produit.nom} : {str(e)}")
+                        messages_list.append(f"{produit.nom} : {str(e)}")
 
         request.session['messages'] = messages_list
         return redirect('approvisionner_magasin', centre_logistique_id=centre_logistique_id)
