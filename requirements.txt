@@ -4,3 +4,7 @@ mysql-connector-python
 pytest
 pytest-cov
 pytest-mock
+Django>=5.0,<6.0
+mysqlclient
+django-environ
+pytest-django

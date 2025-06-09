@@ -12,13 +12,15 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
-    command: ["bash", "/app/wait-for-it.sh", "db:3306", "-t", "600", "--", "python", "src/cli/main.py"]
+      DB_HOST: db
+      DB_PORT: 3306
+      DJANGO_SETTINGS_MODULE: pos_django.settings
   db:
     image: mysql:9.3
     container_name: mon-db-container
     restart: unless-stopped
     environment:
-      MYSQL_RANDOM_ROOT_PASSWORD: 1
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
