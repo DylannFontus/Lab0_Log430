@@ -1,6 +1,5 @@
-from db.session import SessionLocal
+from db.init_db import init_db
 from services.Magasin import Magasin
-from repositories.ProduitRepository import ProduitRepository
 
 def afficher_menu():
     print("\n--- Menu POS ---")
@@ -11,40 +10,25 @@ def afficher_menu():
     print("0. Quitter")
 
 def main():
-    db = SessionLocal()
-    vente_service = Magasin(db)
-    produit_repo = ProduitRepository(db)
+    print("Bienvenue dans le système de point de vente (POS) !")
+    print("Initialisation de la base de données...")
+    init_db()
 
     while True:
         afficher_menu()
         choix = input("Votre choix : ")
 
         if choix == "1":
-            nom = input("Nom (optionnel) : ")
-            categorie = input("Catégorie (optionnel) : ")
-            produits = produit_repo.search(nom, categorie)
-            for p in produits:
-                print(f"{p.id} - {p.nom} ({p.categorie}) - {p.prix}$ - Stock: {p.quantite_stock}")
+            Magasin.RechercheProduit()
 
         elif choix == "2":
-            ids = input("IDs des produits séparés par virgule : ")
-            try:
-                vente = vente_service.effectuer_vente([int(i) for i in ids.split(",")])
-                print(f"Vente #{vente.id} enregistrée.")
-            except Exception as e:
-                print("Erreur :", e)
+            Magasin.FaireVente()
 
         elif choix == "3":
-            idv = int(input("ID de la vente à annuler : "))
-            try:
-                vente_service.annuler_vente(idv)
-                print("Vente annulée.")
-            except Exception as e:
-                print("Erreur :", e)
+            Magasin.AnnulerVente()
 
         elif choix == "4":
-            for p in produit_repo.get_all():
-                print(f"{p.id} - {p.nom} - Stock: {p.quantite_stock}")
+            Magasin.AfficherProduit()
 
         elif choix == "0":
             print("Au revoir !")

@@ -1,43 +1,50 @@
+from db.session import SessionLocal
 from models.Produit import Produit
-from sqlalchemy.orm import Session
 
-class ProduitRepository:
-    def __init__(self, db: Session):
-        self.db = db
+def afficher_produits():
+    session = SessionLocal()
+    try:
+        produits = session.query(Produit).all()
+        if not produits:
+            print("Aucun produit trouvé.")
+            return
 
-    def get_by_id(self, id: int):
-        return self.db.query(Produit).filter(Produit.id == id).first()
+        print("\n--- Liste des produits en stock ---")
+        for produit in produits:
+            print(
+                f"[{produit.id}] {produit.nom} - {produit.prix:.2f}$ "
+                f"(Categorie: {produit.categorie}) "
+                f"(Stock: {produit.quantite_stock})"
+            )
+    finally:
+        session.close()
 
-    def search(self, nom=None, categorie=None):
-        query = self.db.query(Produit)
-        if nom:
-            query = query.filter(Produit.nom.like(f"%{nom}%"))
-        if categorie:
-            query = query.filter(Produit.categorie.like(f"%{categorie}%"))
-        return query.all()
+def rechercher_produit():
+    session = SessionLocal()
 
-    def get_all(self):
-        return self.db.query(Produit).all()
-    
-    def ajouter_produit(self, produit: Produit):
-        self.db.add(produit)
-        self.db.commit()
-        self.db.refresh(produit)
-        return produit
-    
-    def update_stock(self, produit_id: int, quantite: int):
-        produit = self.get_by_id(produit_id)
-        if produit:
-            produit.quantite_stock += quantite
-            self.db.commit()
-            self.db.refresh(produit)
-            return produit
-        return None
-    
-    def delete_produit(self, produit_id: int):
-        produit = self.get_by_id(produit_id)
-        if produit:
-            self.db.delete(produit)
-            self.db.commit()
-            return True
-        return False
+    try:
+        terme = input("Entrez l'identifiant ou le nom du produit à rechercher : ").strip()
+
+        if terme.isdigit():
+            produit = session.query(Produit).filter_by(id=int(terme)).first()
+            if produit:
+                print(
+                    f"[{produit.id}] {produit.nom} - {produit.prix:.2f}$ "
+                    f"(Categorie: {produit.categorie}) "
+                    f"(Stock: {produit.quantite_stock})"
+                )
+            else:
+                print("Aucun produit trouvé avec cet identifiant.")
+        else:
+            resultats = session.query(Produit).filter(Produit.nom.ilike(f"%{terme}%")).all()
+            if resultats:
+                print("\n--- Résultats ---")
+                for p in resultats:
+                    print(f"[{p.id}] {p.nom} - {p.categorie} - {p.prix:.2f}$ (Stock: {p.quantite_stock})")
+            else:
+                print("Aucun produit ne correspond à ce nom.")
+
+    except Exception as e:
+        print(f"Erreur lors de la recherche : {e}")
+    finally:
+        session.close()

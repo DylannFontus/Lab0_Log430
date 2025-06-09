@@ -85,34 +85,11 @@ Suivez les instructions à l’écran pour utiliser les différentes fonctionnal
 
 ---
 
-## Instructions de test
-
-### 1. Installer les dépendances (hors Docker)
-
-```bash
-pip install mysql-connector-python
-pip install sqlalchemy
-```
-
-### 2. Lancer les tests unitaires
-
-```bash
-pytest
-```
-
-Les tests sont situés dans le dossier `tests/` ou sous forme de fichiers `test_*.py`.
-
----
-
 ## Compilation
 
-Python étant un langage interprété, il n’y a pas de compilation à proprement parler. L’application est lancée directement via :
-
-```bash
-python src/cli/main.py
-```
-
-ou via Docker Compose comme décrit ci-dessus.
+docker-compose down -v --remove-orphans
+docker compose build --no-cache
+docker compose run web
 
 ---
 
@@ -138,7 +115,8 @@ Lab0_Log430/
 ├── docker-compose.yml
 ├── Dockerfile
 ├── README.md
-└── tests/
+├── wait-for-it.sh
+└── requirements.txt
 ```
 
 ---

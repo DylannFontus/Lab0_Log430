@@ -1,42 +1,29 @@
 services:
   web:
     build: .
+    depends_on:
+      - db
     restart: unless-stopped
     container_name: mon-api-container
-    #ports:
-    #  - "5000:5000"
+    ports:
+      - "5000:5000"
+    environment:
+      PYTHONPATH: /app/src
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+    command: ["bash", "/app/wait-for-it.sh", "db:3306", "-t", "600", "--", "python", "src/cli/main.py"]
   db:
     image: mysql:9.3
+    container_name: mon-db-container
     restart: unless-stopped
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: 1
       MYSQL_DATABASE: ${DB_NAME}
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
-  mysql:
-    image: mysql:9.3
-    container_name: mysql_magasin
-    restart: unless-stopped
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: magasin
-    ports:
-      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
-      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
-  app:
-    build:
-      context: .
-    container_name: pos_app
-    depends_on:
-      - mysql
-    volumes:
-      - .:/app
-    working_dir: /app
-    command: ["python", "src/cli/main.py"]
-    environment:
-      - PYTHONUNBUFFERED=1
 
 volumes:
   mysql_data:
