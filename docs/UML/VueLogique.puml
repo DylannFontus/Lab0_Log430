@@ -1,63 +1,62 @@
 @startuml
 
-package models {
-    class Produit {
-        id: int
-        nom: str
-        categorie: str
-        prix: float
-        quantite_stock: int
-    }
-
-    class Vente {
-        id: int
-        total: float
-        date: datetime
-    }
-
-    class VenteProduit {
-        id: int
-        vente_id: int
-        produit_id: int
-    }
-}
-
-package repositories {
-    class ProduitRepository {
-        + get_by_id(id)
-        + search(nom, categorie)
-        + get_all()
-        + ajouter_produit(produit)
-        + update_stock(produit_id, quantite)
-        + delete_produit(produit_id)
-    }
-
-    class VenteRepository {
-        + creer_vente(produits, total)
-        + supprimer_vente(vente_id)
-    }
-}
-
-package services {
+package "models" {
     class Magasin {
-        + effectuer_vente(produit_ids)
-        + annuler_vente(vente_id)
+        +id
+        +nom
+        +quartier
+        +type
+    }
+    class Produit {
+        +id
+        +nom
+        +categorie
+        +prix
+        +description
+    }
+    class Stock {
+        +id
+        +produit
+        +magasin
+        +quantite
+    }
+    class Vente {
+        +id
+        +date_heure
+        +total
+        +magasin
+    }
+    class VenteProduit {
+        +id
+        +vente
+        +produit
+        +quantite
+        +prix_unitaire
     }
 }
 
-' Relations ORM
-Produit "1" o-- "*" VenteProduit : utilisé dans >
+package "services" {
+    class MagasinService
+    class ProduitService
+    class StockService
+    class VenteService
+}
+
+' Relations entre modèles
+Magasin "1" o-- "*" Stock : possède >
+Produit "1" o-- "*" Stock : stocké dans >
+Magasin "1" o-- "*" Vente : réalise >
 Vente "1" o-- "*" VenteProduit : contient >
-VenteProduit "*" -- "1" Produit : référence >
-VenteProduit "*" -- "1" Vente : référence >
+Produit "1" o-- "*" VenteProduit : vendu dans >
 
-' Repositories
-ProduitRepository ..> Produit : gère >
-VenteRepository ..> Vente : gère >
-VenteRepository ..> VenteProduit : gère >
-
-' Service
-Magasin ..> ProduitRepository : utilise >
-Magasin ..> VenteRepository : utilise >
+' Services accèdent aux modèles
+MagasinService ..> Magasin
+ProduitService ..> Produit
+StockService ..> Stock
+VenteService ..> Vente
+VenteService ..> VenteProduit
+VenteService ..> Produit
+VenteService ..> Stock
+VenteService ..> Magasin
 
 @enduml

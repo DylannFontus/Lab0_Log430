@@ -1,27 +1,35 @@
 @startuml
 
 actor Utilisateur
-actor Gestionnaire
+actor Administrateur
 
-rectangle "Système de Gestion de Magasin" {
-    (Rechercher un produit) as rechercher
-    (Effectuer une vente) as vente
-    (Annuler une vente) as annuler
-    (Consulter le stock) as stock
-    (Ajouter un produit) as ajouter
-    (Supprimer un produit) as supprimer
+rectangle "POS Django" {
+    (Consulter les magasins) as consulter_magasins
+    (Consulter les produits) as consulter_produits
+    (Rechercher un produit) as rechercher_produit
+    (Ajouter au panier) as ajouter_panier
+    (Retirer du panier) as retirer_panier
+    (Finaliser une vente) as finaliser_vente
+    (Consulter les ventes) as consulter_ventes
+    (Annuler une vente) as annuler_vente
+    (Réapprovisionner un magasin) as reapprovisionner
+    (Générer rapport de ventes) as rapport_ventes
+    (Consulter tableau de bord) as tableau_de_bord
+    (Modifier les produits) as modifier_produits
 }
 
-Utilisateur --> rechercher
-Utilisateur --> vente
-Utilisateur --> stock
+Utilisateur --> consulter_magasins
+Utilisateur --> consulter_produits
+Utilisateur --> rechercher_produit
+Utilisateur --> ajouter_panier
+Utilisateur --> retirer_panier
+Utilisateur --> finaliser_vente
+Utilisateur --> consulter_ventes
 
-Gestionnaire --> ajouter
-Gestionnaire --> supprimer
-Gestionnaire --> annuler
-
-' Associations internes
-vente --> (Mettre à jour stock) : <<include>>
-annuler --> (Restaurer stock) : <<include>>
+Administrateur --> annuler_vente
+Administrateur --> reapprovisionner
+Administrateur --> rapport_ventes
+Administrateur --> tableau_de_bord
+Administrateur --> modifier_produits
 
 @enduml

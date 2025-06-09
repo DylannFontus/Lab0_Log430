@@ -2,41 +2,44 @@
 
 start
 
-:main.py démarre;
-:Affichage du menu utilisateur;
+:Utilisateur accède à l'application via le navigateur web;
+:Requête HTTP envoyée à views.py;
 
-partition "Choix utilisateur" {
-    :Saisie de l'action;
-    if ("Rechercher un produit") then (oui)
-        :ProduitRepository.search();
-        :Affichage des résultats;
-    else if ("Enregistrer une vente") then (oui)
-        :Lecture des IDs produits;
-        :Magasin.effectuer_vente();
-        :ProduitRepository.get_by_id() pour chaque produit;
-        :Vérification stock et MAJ stock;
-        :VenteRepository.creer_vente();
-        :VenteProduit créé pour chaque produit;
-        :Commit DB;
-        :Affichage confirmation;
-    else if ("Annuler une vente") then (oui)
-        :Lecture ID vente;
-        :Magasin.annuler_vente();
-        :Récupération des VenteProduit;
-        :ProduitRepository.get_by_id() pour chaque produit;
-        :Restauration stock;
-        :VenteRepository.supprimer_vente();
-        :Commit DB;
-        :Affichage confirmation;
-    else if ("Consulter le stock") then (oui)
-        :ProduitRepository.get_all();
-        :Affichage stock;
-    else if ("Quitter") then (oui)
-        stop
-    else
-        :Affichage erreur;
+partition "views.py" {
+    :Analyse de l'URL (urls.py);
+    :Appel de la vue appropriée;
+    if (Page caisse ?) then (oui)
+        :page_caisse();
+        :Appel StockService.get_stock_par_magasin();
+        :Rendu du template caisse.html;
+    else if (Recherche produit ?) then (oui)
+        :rechercher_produit();
+        :Appel ProduitService.rechercher_produits_par_nom_ou_id();
+        :Rendu du template caisse.html;
+    else if (Ajouter au panier ?) then (oui)
+        :ajouter_au_panier();
+        :Appel StockService.get_stock_entry();
+        :Mise à jour session panier;
+        :Redirection vers panier.html;
+    else if (Finaliser vente ?) then (oui)
+        :finaliser_vente();
+        :Appel VenteService.creer_vente();
+        :Mise à jour Stock et création Vente/VenteProduit;
+        :Redirection vers vente.html;
+    else if (Réapprovisionnement ?) then (oui)
+        :reapprovisionnement_view();
+        :Appel StockService.transferer_stock();
+        :Rendu reapprovisionner.html;
+    else if (Administration ?) then (oui)
+        :admin_page();
+        :Appel MagasinService.get_all_magasins();
+        :Rendu gestion.html;
     endif
 }
+
+:views.py utilise les services (ProduitService, StockService, VenteService, MagasinService);
+:Les services accèdent aux modèles (models.py);
+:Les modèles interagissent avec la base de données (MySQL);
 
 stop
 

@@ -1,44 +1,69 @@
 @startuml
 
-package models {
+package "models" {
+    class Magasin
     class Produit
+    class Stock
     class Vente
     class VenteProduit
 }
 
-package repositories {
-    class ProduitRepository
-    class VenteRepository
+package "services" {
+    class MagasinService
+    class ProduitService
+    class StockService
+    class VenteService
 }
 
-package services {
-    class Magasin
+package "views" {
+    class views.py
 }
 
-package db {
-    class session
+package "management" {
+    class initialise_db.py
 }
 
-package cli {
-    class main
+package "tests" {
+    class tests.py
 }
 
 ' Relations ORM
-ProduitRepository --> Produit
-VenteRepository --> Vente
-VenteRepository --> VenteProduit
+Magasin "1" o-- "*" Stock : possède >
+Produit "1" o-- "*" Stock : stocké dans >
+Magasin "1" o-- "*" Vente : réalise >
+Vente "1" o-- "*" VenteProduit : contient >
+Produit "1" o-- "*" VenteProduit : vendu dans >
 
-' Service utilise les repositories
-Magasin --> ProduitRepository
-Magasin --> VenteRepository
+' Services utilisent les modèles
+MagasinService ..> Magasin
+ProduitService ..> Produit
+StockService ..> Stock
+VenteService ..> Vente
+VenteService ..> VenteProduit
+VenteService ..> Produit
+VenteService ..> Stock
+VenteService ..> Magasin
 
-' CLI utilise le service et le repo produit
-main --> Magasin
-main --> ProduitRepository
+' Views utilise les services
+views.py ..> MagasinService
+views.py ..> ProduitService
+views.py ..> StockService
+views.py ..> VenteService
 
-' Session DB utilisée partout
-ProduitRepository --> session
-VenteRepository --> session
-Magasin --> session
+' Commande d'initialisation utilise les modèles
+initialise_db.py ..> Magasin
+initialise_db.py ..> Produit
+initialise_db.py ..> Stock
+
+' Tests importent tout
+tests.py ..> MagasinService
+tests.py ..> ProduitService
+tests.py ..> StockService
+tests.py ..> VenteService
+tests.py ..> Magasin
+tests.py ..> Produit
+tests.py ..> Stock
+tests.py ..> Vente
+tests.py ..> VenteProduit
 
 @enduml

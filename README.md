@@ -1,54 +1,12 @@
-# Lab0_Log430
-## Architecture du Projet
+# Lab2_Log430
 
-Le projet **Lab0_Log430** est un simple programme en Python qui retourne un simple hello world ( ne le print pas, simplement le retourne ). Le Python à été choisi, car il était le language le plus simple à mettre en place que je connaisse. Voici les principaux composants :
+## Description
 
-- **LAB0_LOG430/** : Contient le code source principal du projet ainsi que les tests et les fichiers reliés au docker.
-- **.github/workflows/** : Contient les fichiers concernant la pipeline CI/CD sur GitHub
+Lab0_Log430 est une application de gestion de point de vente (POS) développée en Python avec le framework Django. Elle permet de gérer les magasins, les produits, les ventes, les stocks et propose une interface web moderne. Le projet est conçu pour être facilement déployé et testé grâce à Docker et à une architecture modulaire.
 
-C'est un projet assez simple, donc il n'y a pas eu nécessité de créer plus de dossier dans l'architecture.
+---
 
-## Structure du Projet
-
-Voici une vue d'ensemble de la structure des dossiers et fichiers :
-
-```
-Lab0_Log430/
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml
-├── .gitignore
-├── docker-compose.yml
-├── Dockerfile.txt
-├── hellowrld.py
-├── test_hello_world.py.txt
-└── README.md
-```
-## Instructions
-
-Voici les étapes du projet :
-1. À l'aide de Github Desktop, il faut cloner le répertoire avec le lien http
-2. J'ai installé python avec les extentions de VS Code ( commande : sudo apt install python3-pip )
-3. J'ai créer un fichier helloworld.py et j'ai codé une simple fonction qui retourne Hello, World!
-4. J'ai installé pytest avec le terminal ( commande : sudo apt install python3-pytest )
-5. J'ai créer un fichier test_hello_world.py et j'ai codé deux tests
-6. J'ai testé le tout en faisant la commande : pytest test_hello_world.py
-7. J'ai ensuite installé Docker à travers les extensions VS Code ( commande : sudo apt install docker-compose )
-8. J'ai créer un fichier appelé Dockerfile et un autre docker-compose.yml et j'ai mis les informations correspondantes
-9. J'ai fait les commandes : docker build -t helloworld ., docker run helloworld:latest, docker compose up
-10. Le containeur à été créer
-11. J'ai fait la commmande : sudo apt install pylint
-12. J'ai créer les dossiers .github et workflows, puis j'ai créer à l'intérieur le fichier ci-cd.yml, j'ai ensuite ajouté les informations correspondantes à ce fichier
-13. J'ai créer un compte Docker hub puis j'ai créer mes access tokens que j'ai ensuite intégrér aux paramètres de mon projet Github
-14. J'ai refait les commandes de l'étapes 9
-15. J'ai push le projet et etl'intégration s'est terminé avec succès
-
-## Pipeline réussi
-![Image de la pipeline terminé](Images/Lab0/PipelineCICDRéussi.png)
-![Image du processus complet](Images/Lab0/PipelineCICDRéussi2.png)
-
-# Lab1_Log430
-## Instructions d’exécution
+## Instructions de démarrage
 
 ### Prérequis
 
@@ -57,83 +15,77 @@ Voici les étapes du projet :
 - **MySQL** (utilisé via Docker)
 - **pip** (gestionnaire de paquets Python)
 
-### 1. Lancer l’application avec Docker Compose
+### 2. Lancer l’application avec Docker Compose
 
 ```bash
-docker compose up --build
+docker-compose down -v --remove-orphans
+docker compose build --no-cache
+docker compose up
 ```
 
 Cela va :
-- Construire l’image de l’application Python
+- Construire l’image de l’application Django
 - Lancer un conteneur MySQL avec la base `magasin`
-- Lancer l’application CLI dans un conteneur dédié
+- Lancer l’application web Django dans un conteneur dédié
 
-### 2. Utilisation de l’application
+### 3. Accéder à l’application
 
-Une fois le conteneur démarré, le menu CLI s’affiche :
+Ouvrez votre navigateur et rendez-vous sur [http://localhost:5000](http://localhost:5000) pour accéder à l’interface web.
 
-```
---- Menu POS ---
-1. Rechercher un produit
-2. Enregistrer une vente
-3. Annuler une vente
-4. Consulter le stock
-0. Quitter
-```
+### 4. Lancer les tests
 
-Suivez les instructions à l’écran pour utiliser les différentes fonctionnalités.
+Pour exécuter les tests unitaires :
 
----
-
-## Compilation
-
-docker-compose down -v --remove-orphans
-docker compose build --no-cache
-docker compose run web
-
----
-
-## Structure du projet
-
-```
-Lab0_Log430/
-├── src/
-│   ├── cli/
-│   │   └── main.py
-│   ├── services/
-│   │   └── Magasin.py
-│   ├── repositories/
-│   │   ├── ProduitRepository.py
-│   │   └── VenteRepository.py
-│   ├── models/
-│   │   ├── Produit.py
-│   │   ├── Ventes.py
-│   │   └── VenteProduit.py
-│   └── db/
-│       ├── session.py
-│       └── init_db.sql
-├── docker-compose.yml
-├── Dockerfile
-├── README.md
-├── wait-for-it.sh
-└── requirements.txt
+```bash
+docker compose run web pytest
 ```
 
 ---
 
 ## Choix technologiques et justification
 
-- **Python** : langage simple, rapide à prototyper, très utilisé pour les scripts et applications métiers.
-- **SQLAlchemy** : ORM flexible et puissant, facilite l’abstraction de la base de données.
-- **MySQL** : SGBD open-source, robuste, facile à intégrer avec SQLAlchemy et Docker.
-- **Docker & docker-compose** : simplifient le déploiement, l’isolation et la reproductibilité de l’environnement.
-- **pytest** : framework de tests simple et efficace pour Python.
+- **Python** : Langage simple, expressif et rapide à prototyper, idéal pour les applications métiers.
+- **Django** : Framework web robuste et structurant, facilite la séparation des responsabilités (modèles, vues, templates).
+- **MySQL** : SGBD open-source, stable et performant, facilement intégrable avec Django et Docker.
+- **pytest** : Framework de tests moderne et efficace pour Python, utilisé pour automatiser les tests unitaires.
+- **Docker & docker-compose** : Permettent un déploiement reproductible, l’isolation des services (base de données, application) et facilitent la montée en production ou le développement collaboratif.
 
-**Résumé des avantages** :
-- Séparation claire des responsabilités (CLI, services, persistance)
-- Facilité de test et de maintenance
-- Déploiement reproductible grâce à Docker
-- Adapté à l’évolution vers des architectures plus complexes
+---
+
+## Arborescence du projet
+
+```
+Lab0_Log430/
+├── Dockerfile
+├── Images
+│   └── Lab0
+│       ├── PipelineCICDRéussi.png
+│       └── PipelineCICDRéussi2.png
+├── README.md
+├── __pycache__
+│   ├── HelloWorld.cpython-312.pyc
+│   └── test_hello_world.cpython-312-pytest-7.4.4.pyc
+├── docker-compose.yml
+├── docs
+│   ├── ADR
+│   │   ├── ADR1
+│   │   └── ADR2
+│   └── UML
+│       ├── VueCasUtilisation.puml
+│       ├── VueDeploiement.puml
+│       ├── VueImplementation.puml
+│       ├── VueLogique.puml
+│       └── VueProcessus.puml
+├── entrypoint.sh
+├── requirements.txt
+├── src
+│   └── pos_django
+│       ├── magasin
+│       ├── manage.py
+│       └── pos_django
+├── start.sh
+└── wait-for-it.sh
+```
 
 ---
 
@@ -145,3 +97,4 @@ Le projet intègre une pipeline CI/CD via GitHub Actions :
 - Build et push d’image Docker
 
 ---
+

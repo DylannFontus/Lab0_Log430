@@ -1,21 +1,33 @@
 @startuml
+
 node "Poste Utilisateur" as client {
-    artifact "main.py"
+    artifact "navigateur web"
 }
 
-node "Serveur Applicatif" as app {
-    artifact "Magasin.py"
-    artifact "ProduitRepository.py"
-    artifact "VenteRepository.py"
-    artifact "Produit.py"
-    artifact "Ventes.py"
-    artifact "VenteProduit.py"
-    artifact "session.py"
+node "Serveur Django (POS)" as app {
+    artifact "views.py"
+    artifact "urls.py"
+    artifact "apps.py"
+    artifact "admin.py"
+    artifact "models.py"
+    artifact "services/MagasinService.py"
+    artifact "services/ProduitService.py"
+    artifact "services/VenteService.py"
+    artifact "services/StockService.py"
+    artifact "asgi.py"
+    artifact "wsgi.py"
+    artifact "settings.py"
+    artifact "management/commands/initialise_db.py"
 }
 
-database "MySQL\nmagasin" as db
+node "Serveur Tests" as test {
+    artifact "tests.py"
+}
 
-client --> app : CLI / Appels services
-app --> db : Connexion SQLAlchemy
+database "Base de données\nMySQL" as db
+
+client --> app : Requêtes HTTP (interface web)
+app --> db : ORM Django (SQL)
+test --> app : Appels Django TestCase
 
 @enduml
