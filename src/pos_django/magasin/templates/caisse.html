@@ -5,131 +5,167 @@
     <title>Caisse - {{ magasin.nom }}</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f7f7f7;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
             margin: 0;
-            padding: 20px;
+            padding: 0;
         }
-
-        a {
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
+        }
+        a, .btn-link {
             text-decoration: none;
-            color: #333;
-            background: #e0e0e0;
-            padding: 8px 12px;
+            color: #2980b9;
+            background: #eaf6fb;
+            padding: 10px 18px;
             border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(41, 128, 185, 0.06);
+            transition: background 0.2s, color 0.2s;
             display: inline-block;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
-
-        a:hover {
-            background: #c0c0c0;
+        a:hover, .btn-link:hover {
+            background: #d0e6f7;
+            color: #1a5276;
         }
-
         h1, h2, h3, h4 {
             color: #2c3e50;
+            margin-top: 0;
         }
-
         form {
             margin: 20px 0;
         }
-
         input[type="text"] {
-            padding: 8px;
-            width: 250px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+            padding: 10px;
+            width: 260px;
+            border: 1px solid #b2bec3;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #f8fafc;
+            transition: border 0.2s;
         }
-
+        input[type="text"]:focus {
+            border: 1.5px solid #2980b9;
+            outline: none;
+        }
         button {
-            padding: 8px 16px;
-            border: none;
-            background: #3498db;
+            background: linear-gradient(90deg, #3498db 60%, #6dd5fa 100%);
             color: white;
-            border-radius: 6px;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
             cursor: pointer;
             margin-left: 8px;
+            margin-top: 8px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
+            transition: background 0.2s, transform 0.1s;
         }
-
         button:hover {
-            background: #2980b9;
+            background: linear-gradient(90deg, #217dbb 60%, #3498db 100%);
+            transform: translateY(-2px) scale(1.03);
         }
-
         ul {
             list-style: none;
             padding: 0;
         }
-
         li {
-            background: #ffffff;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 6px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            background: #f4f8fb;
+            margin: 7px 0;
+            padding: 12px 18px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
+            font-size: 1.08em;
+            color: #34495e;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-
         .btn.btn-secondary {
-            background-color: #95a5a6;
+            background: linear-gradient(90deg, #95a5a6 60%, #b2bec3 100%);
             color: white;
-            padding: 10px 14px;
-            border-radius: 6px;
-            margin-top: 10px;
+            padding: 10px 18px;
+            border-radius: 8px;
+            margin-top: 18px;
             display: inline-block;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(149, 165, 166, 0.08);
+            border: none;
+            transition: background 0.2s, transform 0.1s;
         }
-
         .btn.btn-secondary:hover {
-            background-color: #7f8c8d;
+            background: linear-gradient(90deg, #7f8c8d 60%, #95a5a6 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
+            li { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
+<div class="container">
 
-<a href="{% url 'home' %}">🏠 Accueil</a>
+    <a href="{% url 'home' %}" class="btn-link">Accueil</a>
 
-<h1>Caisse pour le magasin {{ magasin.nom }}</h1>
+    <h1>Caisse pour le magasin {{ magasin.nom }}</h1>
 
-<h3>Recherche de produit</h3>
-<form method="get" action="{% url 'rechercher_produit' magasin_id=magasin_id %}">
-    <input type="text" name="q" placeholder="Nom ou ID du produit" required>
-    <button type="submit">Rechercher</button>
-</form>
+    <h3>Recherche de produit</h3>
+    <form method="get" action="{% url 'rechercher_produit' magasin_id=magasin_id %}">
+        <input type="text" name="q" placeholder="Nom ou ID du produit" required>
+        <button type="submit">Rechercher</button>
+    </form>
 
-{% if produits_recherches %}
-    <h4>Résultats :</h4>
-    <ul>
-        {% for produit in produits_recherches %}
-            <li>{{ produit.nom }} — {{ produit.prix }} $</li>
-        {% empty %}
-            <li>Aucun produit trouvé.</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+    {% if produits_recherches %}
+        <h4>Résultats :</h4>
+        <ul>
+            {% for produit in produits_recherches %}
+                <li>
+                    <span>{{ produit.nom }}</span>
+                    <span style="color:#2980b9;">{{ produit.prix }} $</span>
+                </li>
+            {% empty %}
+                <li>Aucun produit trouvé.</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-<form method="get" action="{% url 'page_caisse' magasin_id=magasin_id %}">
-    <button type="submit" name="action" value="afficher_produits">Afficher les produits</button>
-</form>
+    <form method="get" action="{% url 'page_caisse' magasin_id=magasin_id %}">
+        <button type="submit" name="action" value="afficher_produits">Afficher les produits</button>
+    </form>
 
-{% if afficher_produits %}
-    <h2>Produits disponibles</h2>
-    <ul>
-        {% for stock in stocks %}
-            <li>{{ stock.produit.nom }} — Quantité: {{ stock.quantite }}</li>
-        {% empty %}
-            <li>Aucun produit en stock</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+    {% if afficher_produits %}
+        <h2>📦 Produits disponibles</h2>
+        <ul>
+            {% for stock in stocks %}
+                <li>
+                    <span>{{ stock.produit.nom }}</span>
+                    <span style="color:#636e72;">Quantité: {{ stock.quantite }}</span>
+                </li>
+            {% empty %}
+                <li>Aucun produit en stock</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-<form action="{% url 'reapprovisionner' magasin.id %}" method="get">
-    <button type="submit">Réapprovisionner depuis le centre logistique</button>
-</form>
+    <form action="{% url 'reapprovisionner' magasin.id %}" method="get">
+        <button type="submit">Réapprovisionner depuis le centre logistique</button>
+    </form>
 
-<form action="{% url 'panier' magasin.id %}" method="get">
-    <button type="submit">🛒 Commencer une vente</button>
-</form>
+    <form action="{% url 'panier' magasin.id %}" method="get">
+        <button type="submit">Commencer une vente</button>
+    </form>
 
-<a href="{% url 'liste_ventes' magasin_id=magasin.id %}" class="btn btn-secondary">
-    Voir les ventes
-</a>
-
+    <a href="{% url 'liste_ventes' magasin_id=magasin.id %}" class="btn btn-secondary">
+        Voir les ventes
+    </a>
+</div>
 </body>
 </html>

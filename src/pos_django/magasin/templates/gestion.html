@@ -5,76 +5,86 @@
     <title>Administration</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
-            padding: 40px;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
         }
-
-        a {
-            text-decoration: none;
-            color: #3498db;
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
         }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
         .home-link {
             display: inline-block;
             margin-bottom: 20px;
-            background-color: #2ecc71;
+            background: linear-gradient(90deg, #27ae60 60%, #2ecc71 100%);
             color: white;
-            padding: 10px 20px;
+            padding: 10px 22px;
             border-radius: 8px;
             text-decoration: none;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.08);
+            transition: background 0.2s, transform 0.1s;
         }
-
         .home-link:hover {
-            background-color: #27ae60;
+            background: linear-gradient(90deg, #219150 60%, #27ae60 100%);
+            transform: translateY(-2px) scale(1.03);
         }
-
         h1, h2 {
             color: #2c3e50;
+            margin-top: 0;
         }
-
         ul {
             list-style-type: none;
             padding: 0;
+            margin-bottom: 30px;
         }
-
         li {
-            margin: 10px 0;
-            background-color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin: 12px 0;
+            background-color: #f4f8fb;
+            padding: 16px 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
+            transition: box-shadow 0.2s;
         }
-
+        li:hover {
+            box-shadow: 0 4px 16px rgba(52, 152, 219, 0.12);
+        }
         li a {
             font-weight: bold;
             color: #34495e;
+            font-size: 1.08em;
+            text-decoration: none;
+            transition: color 0.2s;
         }
-
         li a:hover {
             color: #2980b9;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
+            li { padding: 12px 10px; }
         }
     </style>
 </head>
 <body>
+<div class="container">
+    <a href="{% url 'home' %}" class="home-link">Accueil</a>
+    <h1>Administration</h1>
 
-<a href="{% url 'home' %}" class="home-link">🏠 Accueil</a>
-<h1>Administration</h1>
-
-<h2>Entités administratives</h2>
-<ul>
-    {% for entite in entites_admin %}
-        <li>
-            <a href="{% url 'admin_entite' entite.id %}">
-                {{ entite.nom }} ({{ entite.type }})
-            </a>
-        </li>
-    {% endfor %}
-</ul>
-
+    <h2>Entités administratives</h2>
+    <ul>
+        {% for entite in entites_admin %}
+            <li>
+                <a href="{% url 'admin_entite' entite.id %}">
+                    {{ entite.nom }} ({{ entite.type }})
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+</div>
 </body>
 </html>

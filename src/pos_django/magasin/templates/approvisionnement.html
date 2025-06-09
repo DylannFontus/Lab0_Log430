@@ -5,112 +5,129 @@
     <title>Approvisionnement</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
-            padding: 30px;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
         }
-
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
+        }
         h1 {
             color: #2c3e50;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
         }
-
-        h2 {
-            color: #34495e;
-            margin-top: 30px;
-            margin-bottom: 15px;
-        }
-
-        form {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.06);
-            max-width: 600px;
-        }
-
         label {
             display: block;
-            margin-top: 15px;
-            font-weight: bold;
+            margin-top: 18px;
+            font-weight: 600;
+            color: #34495e;
         }
-
         select, input[type="number"] {
             margin-top: 8px;
-            margin-bottom: 15px;
-            padding: 8px;
+            margin-bottom: 18px;
+            padding: 10px;
             width: 100%;
-            max-width: 400px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            border-radius: 8px;
+            border: 1px solid #b2bec3;
+            font-size: 16px;
+            background: #f8fafc;
+            transition: border 0.2s;
         }
-
-        div {
+        select:focus, input[type="number"]:focus {
+            border: 1.5px solid #2980b9;
+            outline: none;
+        }
+        .produit-block {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f4f8fb;
+            border-radius: 8px;
+            padding: 12px 18px;
             margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
         }
-
+        .produit-block strong {
+            font-size: 1.08em;
+            color: #2980b9;
+            min-width: 220px;
+        }
         button {
-            background-color: #2ecc71;
+            background: linear-gradient(90deg, #27ae60 60%, #2ecc71 100%);
             color: white;
-            padding: 10px 18px;
+            padding: 12px 28px;
             border: none;
             border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
-            margin-top: 20px;
+            margin-top: 28px;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.08);
+            transition: background 0.2s, transform 0.1s;
         }
-
         button:hover {
-            background-color: #27ae60;
+            background: linear-gradient(90deg, #219150 60%, #27ae60 100%);
+            transform: translateY(-2px) scale(1.03);
         }
-
         a {
             display: inline-block;
-            margin-top: 30px;
+            margin-top: 32px;
             text-decoration: none;
-            color: #333;
-            background-color: #e0e0e0;
-            padding: 10px 16px;
+            color: #2980b9;
+            background: #eaf6fb;
+            padding: 10px 18px;
             border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(41, 128, 185, 0.06);
+            transition: background 0.2s, color 0.2s;
         }
-
         a:hover {
-            background-color: #c0c0c0;
+            background: #d0e6f7;
+            color: #1a5276;
         }
-
-        strong {
-            display: inline-block;
-            width: 250px;
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
+            .produit-block { flex-direction: column; align-items: flex-start; }
         }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Approvisionner un magasin</h1>
 
-<h1>Approvisionner un magasin depuis le centre logistique</h1>
+    {% load custom_filters %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="magasin">Choisir un magasin :</label>
+        <select name="destination_magasin_id" required>
+            {% for m in magasins %}
+                {% if m.id != centre_logistique.id %}
+                    <option value="{{ m.id }}">{{ m.nom }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
 
-{% load custom_filters %}
-<form method="post">
-    {% csrf_token %}
-    <label for="magasin">Choisir un magasin :</label>
-    <select name="destination_magasin_id" required>
-        {% for m in magasins %}
-            {% if m.id != centre_logistique.id %}
-                <option value="{{ m.id }}">{{ m.nom }}</option>
-            {% endif %}
+        <h2 style="margin-top:32px; color:#34495e;">Produits disponibles au centre logistique :</h2>
+        {% for produit in produits %}
+            <div class="produit-block">
+                <strong>{{ produit.nom }}</strong>
+                <span style="color:#636e72;">Stock : {{ stock_centre_dict|get_item:produit.id|default:"0" }}</span>
+                <input type="number" name="quantite_{{ produit.id }}" min="0" placeholder="Quantité à transférer">
+            </div>
         {% endfor %}
-    </select>
 
-    <h2>Produits disponibles au centre logistique :</h2>
-    {% for produit in produits %}
-        <div>
-            <strong>{{ produit.nom }}</strong> (Stock : {{ stock_centre_dict|get_item:produit.id|default:"0" }})
-            <input type="number" name="quantite_{{ produit.id }}" min="0" placeholder="Quantité à transférer">
-        </div>
-    {% endfor %}
+        <button type="submit">Transférer</button>
+    </form>
 
-    <button type="submit">Transférer</button>
-</form>
-
-<a href="{% url 'admin_page' %}">← Retour au centre logistique</a>
-
+    <a href="{% url 'admin_page' %}">← Retour au centre logistique</a>
+</div>
 </body>
 </html>

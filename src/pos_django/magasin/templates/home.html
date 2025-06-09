@@ -5,50 +5,63 @@
     <title>Menu principal</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f2f2f2;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
             margin: 0;
-            padding: 40px;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 60px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 48px 36px 40px 36px;
             text-align: center;
         }
-
         h1 {
             color: #2c3e50;
             margin-bottom: 40px;
+            letter-spacing: 1px;
         }
-
         a {
             text-decoration: none;
-            margin: 10px;
+            margin: 18px;
+            display: inline-block;
         }
-
         button {
-            padding: 12px 24px;
-            font-size: 16px;
+            padding: 16px 36px;
+            font-size: 1.15em;
             border: none;
-            border-radius: 8px;
-            background-color: #3498db;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #3498db 60%, #6dd5fa 100%);
             color: white;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.08);
+            transition: background 0.2s, transform 0.1s;
         }
-
         button:hover {
-            background-color: #2980b9;
+            background: linear-gradient(90deg, #217dbb 60%, #3498db 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
+            button { width: 100%; margin-bottom: 18px; }
         }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Menu principal ( Étape 1 )</h1>
 
-<h1>Menu principal</h1>
+    <a href="{% url 'magasins' %}">
+        <button>Ouvrir une caisse</button>
+    </a>
 
-<a href="{% url 'magasins' %}">
-    <button>Ouvrir une caisse</button>
-</a>
-
-<a href="{% url 'admin_page' %}">
-    <button>Administration</button>
-</a>
-
+    <a href="{% url 'admin_page' %}">
+        <button>Administration</button>
+    </a>
+</div>
 </body>
 </html>

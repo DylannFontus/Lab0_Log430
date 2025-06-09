@@ -1,13 +1,6 @@
 from django.shortcuts import get_object_or_404
 from ..models import Magasin
 
-from django.test import TestCase
-
-class MagasinTest(TestCase):
-    def test_truc(self):
-        ...
-
-
 def get_all_magasins():
     """Retourne tous les magasins, quelle que soit leur catégorie."""
     return Magasin.objects.all()

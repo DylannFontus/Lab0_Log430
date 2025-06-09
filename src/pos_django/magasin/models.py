@@ -3,7 +3,6 @@ from django.utils.timezone import now
 
 # Create your models here.
 class Magasin(models.Model):
-    """Représente un magasin"""
     nom = models.CharField(max_length=100)
     quartier = models.CharField(max_length=100)
     type = models.CharField(max_length=50)
@@ -12,7 +11,6 @@ class Magasin(models.Model):
         return str(self.nom)
 
 class Produit(models.Model):
-    """Représente un produit."""
     nom = models.CharField(max_length=100)
     categorie = models.CharField(max_length=100)
     prix = models.FloatField()
@@ -22,7 +20,6 @@ class Produit(models.Model):
         return str(self.nom)
 
 class Stock(models.Model):
-    """Représente le stock d’un produit dans un magasin."""
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE, related_name="stocks")
     magasin = models.ForeignKey(Magasin, on_delete=models.CASCADE, related_name="stocks")
     quantite = models.IntegerField()
@@ -33,7 +30,6 @@ class Stock(models.Model):
         return f"{self.quantite} de {nom_produit} depuis {nom_magasin}"
 
 class Vente(models.Model):
-    """Représente une vente."""
     date_heure = models.DateTimeField(default=now)
     total = models.FloatField()
     magasin = models.ForeignKey(Magasin, on_delete=models.CASCADE, related_name="ventes")
@@ -44,7 +40,6 @@ class Vente(models.Model):
         return f"Vente {vente_id} - {self.total}$"
 
 class VenteProduit(models.Model):
-    """Représente les produits d'une vente."""
     vente = models.ForeignKey(Vente, on_delete=models.CASCADE, related_name="produits")
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
     quantite = models.IntegerField()

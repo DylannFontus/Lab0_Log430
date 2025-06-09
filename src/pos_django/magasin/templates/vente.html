@@ -5,112 +5,131 @@
     <title>Ventes du magasin</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
             margin: 0;
-            padding: 30px;
+            padding: 0;
         }
-
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
+        }
         h2 {
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
         }
-
         a {
             text-decoration: none;
-            color: #333;
-            background: #e0e0e0;
-            padding: 8px 12px;
+            color: #2980b9;
+            background: #eaf6fb;
+            padding: 10px 18px;
             border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(41, 128, 185, 0.06);
             display: inline-block;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            transition: background 0.2s, color 0.2s;
         }
-
         a:hover {
-            background: #c0c0c0;
+            background: #d0e6f7;
+            color: #1a5276;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
-            box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
+            background: #f8fafc;
+            border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
         }
-
         th, td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #ddd;
+            padding: 14px 16px;
+            border-bottom: 1px solid #e1e8ed;
             text-align: left;
         }
-
         th {
             background-color: #3498db;
             color: white;
+            font-weight: 600;
         }
-
+        tr:last-child td {
+            border-bottom: none;
+        }
         tr:hover {
-            background-color: #f1f1f1;
+            background-color: #f1f7fa;
         }
-
         ul {
-            padding-left: 16px;
+            padding-left: 18px;
             margin: 0;
         }
-
         button {
-            padding: 8px 16px;
-            background-color: #e74c3c;
+            padding: 8px 18px;
+            background: linear-gradient(90deg, #e74c3c 60%, #e57373 100%);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: background 0.2s, transform 0.1s;
         }
-
         button:hover {
-            background-color: #c0392b;
+            background: linear-gradient(90deg, #b71c1c 60%, #e74c3c 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        @media (max-width: 700px) {
+            .container { padding: 18px 8px; }
+            table, thead, tbody, th, td, tr { display: block; width: 100%; }
+            th, td { padding: 10px 4px; }
         }
     </style>
 </head>
 <body>
+<div class="container">
+    <h2>Ventes du magasin</h2>
 
-<h2>Ventes du magasin</h2>
+    <a href="{% url 'page_caisse' magasin_id=magasin_id %}">← Retour à la caisse</a>
 
-<a href="{% url 'page_caisse' magasin_id=magasin_id %}">← Retour à la caisse</a>
-
-<table>
-    <thead>
-        <tr>
-            <th>Date</th>
-            <th>Total</th>
-            <th>Contenu</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for vente in ventes %}
-        <tr>
-            <td>{{ vente.date_heure|date:"Y-m-d H:i" }}</td>
-            <td>{{ vente.total }} $</td>
-            <td>
-                <ul>
-                    {% for item in vente.produits.all %}
-                        <li>{{ item.produit.nom }} × {{ item.quantite }} @ {{ item.prix_unitaire }} $</li>
-                    {% endfor %}
-                </ul>
-            </td>
-            <td>
-                <form action="{% url 'annuler_vente' magasin_id=magasin_id vente_id=vente.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" onclick="return confirm('Annuler cette vente ?');">Annuler</button>
-                </form>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Contenu</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for vente in ventes %}
+            <tr>
+                <td>{{ vente.date_heure|date:"Y-m-d H:i" }}</td>
+                <td>{{ vente.total }} $</td>
+                <td>
+                    <ul>
+                        {% for item in vente.produits.all %}
+                            <li>
+                                <div><strong>Produit :</strong> {{ item.produit.nom }}</div>
+                                <div><strong>Quantité :</strong> {{ item.quantite }}</div>
+                                <div><strong>Prix unitaire :</strong> {{ item.prix_unitaire }} $</div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <form action="{% url 'annuler_vente' magasin_id=magasin_id vente_id=vente.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" onclick="return confirm('Annuler cette vente ?');">Annuler</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

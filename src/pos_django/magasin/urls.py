@@ -2,9 +2,14 @@ from django.urls import path
 from .views import page_caisse, page_magasins, home_view, reapprovisionnement_view, liste_ventes, rechercher_produit, afficher_panier, ajouter_au_panier, retirer_du_panier, finaliser_vente, annuler_vente, admin_page, admin_entite, rapport_ventes, tableau_de_bord, modifier_produits_depuis_maison_mere, modifier_produit, approvisionner_magasin
 
 urlpatterns = [
-    path('', home_view, name='home'),
-    path('magasins/', page_magasins, name='magasins'),
-    path('caisse/<int:magasin_id>/', page_caisse, name='page_caisse'),
+    path('', 
+        home_view, 
+        name='home'
+    ),
+    path('magasins/', 
+        page_magasins, 
+        name='magasins'
+    ),
     path(
         'reapprovisionner/<int:magasin_id>/',
         reapprovisionnement_view,
@@ -15,10 +20,14 @@ urlpatterns = [
         rechercher_produit,
         name='rechercher_produit'
     ),
-
+    path('caisse/<int:magasin_id>/', 
+        page_caisse, 
+        name='page_caisse'
+    ),
     path("magasin/<int:magasin_id>/panier/", 
-         afficher_panier, 
-         name="panier"),
+        afficher_panier, 
+        name="panier"
+    ),
     path(
         '<int:magasin_id>/panier/ajouter/',
         ajouter_au_panier,
@@ -34,18 +43,24 @@ urlpatterns = [
         finaliser_vente,
         name='finaliser_panier'
     ),
-
     path('<int:magasin_id>/ventes/', 
-         liste_ventes, 
-         name='liste_ventes'
+        liste_ventes, 
+        name='liste_ventes'
     ),
     path(
         '<int:magasin_id>/ventes/<int:vente_id>/annuler/',
         annuler_vente,
         name='annuler_vente'
     ),
-
-    path("gestion/", admin_page, name="admin_page"),
+    path(
+        'centre/<int:centre_logistique_id>/approvisionner/',
+        approvisionner_magasin,
+        name='approvisionner_magasin'
+    ),
+    path("gestion/", 
+        admin_page, 
+        name="admin_page"
+    ),
     path(
         "gestion/<int:magasin_id>/",
         admin_entite,
@@ -70,10 +85,5 @@ urlpatterns = [
         'gestion/produits/<int:produit_id>/modifier/',
         modifier_produit,
         name='modifier_produit'
-    ),
-    path(
-        'centre/<int:centre_logistique_id>/approvisionner/',
-        approvisionner_magasin,
-        name='approvisionner_magasin'
     ),
 ]

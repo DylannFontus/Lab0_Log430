@@ -5,70 +5,87 @@
     <title>Réapprovisionnement</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background: #f9f9f9;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
             margin: 0;
-            padding: 30px;
+            padding: 0;
         }
-
+        .container {
+            max-width: 540px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
+        }
         a {
             text-decoration: none;
-            color: #333;
-            background: #e0e0e0;
-            padding: 8px 12px;
+            color: #2980b9;
+            background: #eaf6fb;
+            padding: 10px 18px;
             border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(41, 128, 185, 0.06);
+            transition: background 0.2s, color 0.2s;
             display: inline-block;
-            margin-bottom: 20px;
+            margin-bottom: 18px;
+            margin-right: 8px;
         }
-
         a:hover {
-            background: #c0c0c0;
+            background: #d0e6f7;
+            color: #1a5276;
         }
-
         h1 {
             color: #2c3e50;
-            margin-bottom: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
         }
-
         form {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 8px rgba(0,0,0,0.1);
-            max-width: 500px;
+            background: #f4f8fb;
+            padding: 24px 18px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
+            max-width: 100%;
+            margin: 0 auto 18px auto;
         }
-
         label {
             display: block;
             margin-top: 10px;
-            font-weight: bold;
+            font-weight: 600;
+            color: #34495e;
         }
-
         select, input[type="number"] {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            font-size: 14px;
+            padding: 10px;
+            margin-top: 8px;
+            margin-bottom: 18px;
+            border-radius: 8px;
+            border: 1px solid #b2bec3;
+            font-size: 16px;
+            background: #f8fafc;
+            transition: border 0.2s;
         }
-
+        select:focus, input[type="number"]:focus {
+            border: 1.5px solid #2980b9;
+            outline: none;
+        }
         button {
-            padding: 10px 20px;
-            background-color: #27ae60;
+            padding: 12px 28px;
+            background: linear-gradient(90deg, #27ae60 60%, #2ecc71 100%);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.3s ease;
-            font-size: 16px;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.08);
+            transition: background 0.2s, transform 0.1s;
         }
-
         button:hover {
-            background-color: #1e8449;
+            background: linear-gradient(90deg, #219150 60%, #27ae60 100%);
+            transform: translateY(-2px) scale(1.03);
         }
-
         ul {
             background-color: #fff3cd;
             color: #856404;
@@ -77,49 +94,52 @@
             padding: 15px;
             list-style: none;
             margin-bottom: 20px;
-            max-width: 500px;
+            max-width: 100%;
         }
-
         li {
             margin: 5px 0;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
+            form { padding: 14px 4px; }
         }
     </style>
 </head>
 {% load stock_tags %}
 {% load custom_filters %}
 <body>
+<div class="container">
+    <a href="{% url 'home' %}">Accueil</a>
+    <a href="{% url 'page_caisse' magasin.id %}">⬅ Retour à la caisse</a>
 
-<a href="{% url 'home' %}">🏠 Accueil</a><br>
-<a href="{% url 'page_caisse' magasin.id %}">⬅ Retour à la caisse</a>
+    <h1>Réapprovisionnement pour {{ magasin.nom }}</h1>
 
-<h1>Réapprovisionnement pour {{ magasin.nom }}</h1>
+    {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
-{% if messages %}
-    <ul>
-        {% for message in messages %}
-            <li>{{ message }}</li>
-        {% endfor %}
-    </ul>
-{% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label for="produit_id">Produit :</label>
+        <select name="produit_id" required>
+            {% for produit_id, stock in stock_centre.items %}
+                {% with stock_local|get_item:produit_id as local_stock %}
+                    <option value="{{ produit_id }}">
+                        {{ stock.produit.nom }} - Centre: {{ stock.quantite }} | Local: {{ local_stock.quantite }}
+                    </option>
+                {% endwith %}
+            {% endfor %}
+        </select>
 
-<form method="post">
-    {% csrf_token %}
-    <label for="produit_id">Produit :</label>
-    <select name="produit_id" required>
-        {% for produit_id, stock in stock_centre.items %}
-            {% with stock_local|get_item:produit_id as local_stock %}
-                <option value="{{ produit_id }}">
-                    {{ stock.produit.nom }} - Centre: {{ stock.quantite }} | Local: {{ local_stock.quantite }}
-                </option>
-            {% endwith %}
-        {% endfor %}
-    </select>
+        <label for="quantite">Quantité :</label>
+        <input type="number" name="quantite" min="1" required>
 
-    <label for="quantite">Quantité :</label>
-    <input type="number" name="quantite" min="1" required>
-
-    <button type="submit">Réapprovisionner</button>
-</form>
-
+        <button type="submit">Réapprovisionner</button>
+    </form>
+</div>
 </body>
 </html>

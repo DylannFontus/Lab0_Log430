@@ -5,59 +5,83 @@
     <title>Centre logistique</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
-            padding: 40px;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
         }
-
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
+            text-align: center;
+        }
         h1 {
             color: #2c3e50;
             margin-bottom: 30px;
+            letter-spacing: 1px;
         }
-
         ul {
             list-style-type: none;
             padding: 0;
+            margin-bottom: 30px;
         }
-
         li {
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
-
-        a {
+        a.action-link {
             display: inline-block;
             text-decoration: none;
-            background-color: #3498db;
+            background: linear-gradient(90deg, #27ae60 60%, #2ecc71 100%);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 28px;
             border-radius: 8px;
-            transition: background-color 0.3s ease;
+            font-size: 1.08em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.08);
+            transition: background 0.2s, transform 0.1s;
         }
-
-        a:hover {
-            background-color: #2980b9;
+        a.action-link:hover {
+            background: linear-gradient(90deg, #219150 60%, #27ae60 100%);
+            transform: translateY(-2px) scale(1.03);
         }
-
-        .retour {
-            background-color: #bdc3c7;
+        a.retour {
+            display: inline-block;
+            background: #bdc3c7;
             color: #2c3e50;
             margin-top: 30px;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(189, 195, 199, 0.10);
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
         }
-
-        .retour:hover {
-            background-color: #95a5a6;
+        a.retour:hover {
+            background: #95a5a6;
+            color: #fff;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
         }
     </style>
 </head>
 <body>
+<div class="container">
+    <h1>Centre logistique : {{ magasin.nom }}</h1>
 
-<h1>Centre logistique : {{ magasin.nom }}</h1>
+    <ul>
+        <li>
+            <a class="action-link" href="{% url 'approvisionner_magasin' magasin.id %}">
+                Approvisionner un magasin
+            </a>
+        </li>
+    </ul>
 
-<ul>
-    <li><a href="{% url 'approvisionner_magasin' magasin.id %}">🚚 Approvisionner un magasin</a></li>
-</ul>
-
-<a class="retour" href="{% url 'admin_page' %}">← Retour</a>
-
+    <a class="retour" href="{% url 'admin_page' %}">← Retour</a>
+</div>
 </body>
 </html>

@@ -1,13 +1,108 @@
-<h1>Modifier les produits</h1>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Modifier les produits</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 32px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            background: #f4f8fb;
+            border-radius: 10px;
+            padding: 18px 16px;
+            margin-bottom: 18px;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
+        }
+        input[type="text"], input[type="number"] {
+            padding: 10px;
+            border: 1px solid #b2bec3;
+            border-radius: 8px;
+            font-size: 1em;
+            background: #f8fafc;
+            flex: 1 1 140px;
+            min-width: 120px;
+            transition: border 0.2s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            border: 1.5px solid #2980b9;
+            outline: none;
+        }
+        button {
+            background: linear-gradient(90deg, #27ae60 60%, #2ecc71 100%);
+            color: white;
+            padding: 10px 22px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.08);
+            transition: background 0.2s, transform 0.1s;
+        }
+        button:hover {
+            background: linear-gradient(90deg, #219150 60%, #27ae60 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        a.retour {
+            display: inline-block;
+            background: #bdc3c7;
+            color: #2c3e50;
+            margin-top: 30px;
+            padding: 10px 22px;
+            border-radius: 8px;
+            font-weight: 500;
+            box-shadow: 0 1px 4px rgba(189, 195, 199, 0.10);
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+        a.retour:hover {
+            background: #95a5a6;
+            color: #fff;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
+            form { flex-direction: column; gap: 8px; }
+            input, button { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Modifier les produits</h1>
 
-{% for produit in produits %}
-  <form method="POST" action="{% url 'modifier_produit' produit.id %}">
-    {% csrf_token %}
-    <input type="text" name="nom" value="{{ produit.nom }}">
-    <input type="number" name="prix" step="0.01" value="{{ produit.prix }}">
-    <input type="text" name="description" value="{{ produit.description }}">
-    <button type="submit">Modifier</button>
-  </form>
-{% endfor %}
+    {% for produit in produits %}
+      <form method="POST" action="{% url 'modifier_produit' produit.id %}">
+        {% csrf_token %}
+        <input type="text" name="nom" value="{{ produit.nom }}" placeholder="Nom du produit" required>
+        <input type="number" name="prix" step="0.01" value="{{ produit.prix }}" placeholder="Prix" required>
+        <input type="text" name="description" value="{{ produit.description }}" placeholder="Description">
+        <button type="submit">Modifier</button>
+      </form>
+    {% endfor %}
 
-<a href="{% url 'admin_page' %}">← Retour</a>
+    <a href="{% url 'admin_page' %}" class="retour">← Retour</a>
+</div>
+</body>
+</html>

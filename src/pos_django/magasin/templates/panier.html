@@ -4,17 +4,116 @@
     <meta charset="UTF-8">
     <title>Panier</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
-        th, td { padding: 10px; border: 1px solid #ccc; text-align: left; }
+        body {
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            background: linear-gradient(120deg, #e0eafc, #cfdef3 100%);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12);
+            padding: 40px 36px 32px 36px;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+            background: #f8fafc;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.05);
+        }
+        th, td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #e1e8ed;
+            text-align: left;
+        }
+        th {
+            background: #eaf6fb;
+            color: #2980b9;
+            font-weight: 600;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
         form { display: inline; }
-        .btn { padding: 6px 12px; background-color: #28a745; color: white; border: none; cursor: pointer; }
-        .btn-red { background-color: #dc3545; }
-        .btn-grey { background-color: #6c757d; }
-        .btn:hover { opacity: 0.9; }
+        .btn {
+            padding: 8px 18px;
+            background: linear-gradient(90deg, #27ae60 60%, #2ecc71 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.08);
+        }
+        .btn:hover {
+            background: linear-gradient(90deg, #219150 60%, #27ae60 100%);
+            transform: translateY(-2px) scale(1.03);
+        }
+        .btn-red {
+            background: linear-gradient(90deg, #dc3545 60%, #e57373 100%);
+        }
+        .btn-red:hover {
+            background: linear-gradient(90deg, #b71c1c 60%, #dc3545 100%);
+        }
+        .btn-grey {
+            background: linear-gradient(90deg, #95a5a6 60%, #b2bec3 100%);
+            color: white;
+        }
+        .btn-grey:hover {
+            background: linear-gradient(90deg, #7f8c8d 60%, #95a5a6 100%);
+        }
+        .total-section {
+            margin-top: 24px;
+            font-size: 1.18em;
+            color: #2c3e50;
+            text-align: right;
+        }
+        .section-title {
+            margin-top: 36px;
+            color: #34495e;
+            font-size: 1.15em;
+            font-weight: 600;
+        }
+        label {
+            margin-right: 8px;
+            font-weight: 500;
+        }
+        select, input[type="number"] {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #b2bec3;
+            font-size: 1em;
+            background: #f8fafc;
+            margin-right: 12px;
+            margin-bottom: 10px;
+            transition: border 0.2s;
+        }
+        select:focus, input[type="number"]:focus {
+            border: 1.5px solid #2980b9;
+            outline: none;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 18px 8px; }
+            table, thead, tbody, th, td, tr { display: block; width: 100%; }
+            th, td { padding: 10px 4px; }
+        }
     </style>
 </head>
 <body>
+<div class="container">
     <h1>Panier</h1>
 
     {% if details %}
@@ -46,7 +145,9 @@
             </tbody>
         </table>
 
-        <h3>Total : {{ total_panier }} $</h3>
+        <div class="total-section">
+            <strong>Total : {{ total_panier }} $</strong>
+        </div>
 
         <form method="post" action="{% url 'finaliser_panier' magasin_id %}">
             {% csrf_token %}
@@ -56,24 +157,24 @@
         <p>Le panier est vide.</p>
     {% endif %}
 
-    <br><br>
-    <a href="{% url 'page_caisse' magasin_id %}" class="btn btn-grey">Retour à la caisse</a>
+    <br>
+    <a href="{% url 'page_caisse' magasin_id %}" class="btn btn-grey">← Retour à la caisse</a>
 
-    <h2>Ajouter un produit</h2>
+    <div class="section-title">Ajouter un produit</div>
+    <form method="post" action="{% url 'ajouter_panier' magasin.id %}">
+        {% csrf_token %}
+        <label for="produit_id">Produit :</label>
+        <select name="produit_id" id="produit_id">
+            {% for produit in produits_disponibles %}
+                <option value="{{ produit.id }}">{{ produit.nom }} ({{ produit.prix }} $)</option>
+            {% endfor %}
+        </select>
 
-<form method="post" action="{% url 'ajouter_panier' magasin.id %}">
-    {% csrf_token %}
-    <label for="produit_id">Produit :</label>
-    <select name="produit_id" id="produit_id">
-        {% for produit in produits_disponibles %}
-            <option value="{{ produit.id }}">{{ produit.nom }} ({{ produit.prix }} $)</option>
-        {% endfor %}
-    </select>
+        <label for="quantite">Quantité :</label>
+        <input type="number" name="quantite" id="quantite" value="1" min="1">
 
-    <label for="quantite">Quantité :</label>
-    <input type="number" name="quantite" id="quantite" value="1" min="1">
-
-    <button type="submit" class="btn">Ajouter au panier</button>
-</form>
+        <button type="submit" class="btn">Ajouter au panier</button>
+    </form>
+</div>
 </body>
 </html>
