@@ -37,7 +37,10 @@ Ouvrez votre navigateur et rendez-vous sur [http://localhost:5000](http://localh
 Pour exécuter les tests unitaires :
 
 ```bash
-docker compose run web pytest
+docker-compose down -v --remove-orphans
+docker compose build --no-cache
+docker compose up -d
+docker compose exec web pytest
 ```
 
 ---
