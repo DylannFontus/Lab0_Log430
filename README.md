@@ -96,5 +96,6 @@ Le projet intègre une pipeline CI/CD via GitHub Actions :
 - Tests automatiques avec pytest
 - Build et push d’image Docker
 
+![Image de la pipeline terminé](Images/LAB2/Etape1PipelineCICDRéussiLAB2.png)
 ---
 
