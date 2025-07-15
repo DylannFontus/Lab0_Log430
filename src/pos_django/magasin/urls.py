@@ -25,8 +25,7 @@ urlpatterns = [
     # API Doc
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-    re_path(r'^swagger(?P<format>.json|.yaml)$',
-            schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    path('swagger.json', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     # API REST
     path('api/', include(router.urls)),
     path('api/magasins/<int:magasin_id>/reapprovisionner/', reapprovisionner_api, name='reapprovisionner_api'),
