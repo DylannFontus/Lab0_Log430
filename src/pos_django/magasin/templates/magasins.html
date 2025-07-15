@@ -74,17 +74,48 @@
 </head>
 <body>
 <div class="container">
-    <a href="{% url 'home' %}" class="home-link">Accueil</a>
-    <h1>Choisissez un magasin</h1>
-    <ul>
-        {% for magasin in magasins %}
-            <li>
-                <form action="{% url 'page_caisse' magasin.id %}" method="get">
-                    <button type="submit">{{ magasin.nom }}</button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+    <h1>Liste des magasins</h1> 
+
+<ul id="magasins-list">
+    
+</ul>
+
+<a href="{% url 'home' %}">Retour à l'accueil</a>
+
+<script>
+    async function fetchMagasins() {
+        try {
+            const response = await fetch('/api/magasins/', {
+                credentials: 'include'
+            });
+            if (!response.ok) throw new Error('Erreur HTTP ' + response.status);
+            const magasins = await response.json();
+
+            const list = document.getElementById('magasins-list');
+            list.innerHTML = ''; 
+
+            if (magasins.length === 0) {
+                list.innerHTML = '<li>Aucun magasin trouvé.</li>';
+                return;
+            }
+
+            magasins.forEach(magasin => {
+                const li = document.createElement('li'); 
+                const link = document.createElement('a');
+                link.href = `/caisse/${magasin.id}/`;
+                link.textContent = `${magasin.nom} — ${magasin.quartier}`;
+                li.appendChild(link);
+                list.appendChild(li); 
+            });
+        } catch (error) {
+            console.error('Erreur lors du chargement des magasins :', error);
+            const list = document.getElementById('magasins-list');
+            list.innerHTML = '<li>Erreur de chargement.</li>';
+        }
+    }
+
+    fetchMagasins();
+</script>
 </div>
 </body>
 </html>

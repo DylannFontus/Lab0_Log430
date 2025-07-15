@@ -8,3 +8,7 @@ Django>=5.0,<6.0
 mysqlclient
 django-environ
 pytest-django
+django-cors-headers
+djangorestframework
+drf-yasg
+requests>=2.31.0

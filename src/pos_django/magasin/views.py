@@ -9,26 +9,22 @@ def home_view(request):
     return render(request, 'home.html')
 
 def page_magasins(request):
-    print("page_magasins appelée")
-    magasins = MagasinService.get_only_magasins()
-    print(f"Magasins récupérés : {magasins}")
-    return render(request, "magasins.html", {"magasins": magasins})
+    return render(request, 'magasins.html')
 
 def page_caisse(request, magasin_id):
     magasin = MagasinService.get_magasin_by_id(magasin_id)
-    action = request.GET.get("action")
-    afficher_produits = action == "afficher_produits"
+    centre_logistique = MagasinService.get_centre_logistique()
+    produits_centre = StockService.get_produits_disponibles(centre_logistique.id)
+    stock_centre, _ = StockService.get_stock_indexed_by_produit(
+        centre_logistique.id, magasin.id
+    )
 
-    stocks = StockService.get_stock_par_magasin(magasin_id) if afficher_produits else []
-
-    context = {
-        "magasin": magasin,
+    return render(request, "caisse.html", {
         "magasin_id": magasin_id,
-        "afficher_produits": afficher_produits,
-        "stocks": stocks,
-    }
-
-    return render(request, "caisse.html", context)
+        "magasin": magasin,
+        "produits_centre": produits_centre,
+        "stock_centre": stock_centre,
+    })
 
 
 def rechercher_produit(request, magasin_id):
@@ -146,33 +142,8 @@ def retirer_du_panier(request, magasin_id, produit_id):
 
 
 def afficher_panier(request, magasin_id):
-    panier = request.session.get("panier", {})
-    produits = Produit.objects.filter(id__in=panier.keys())
-    details = []
-
-    for produit in produits:
-        quantite = panier[str(produit.id)]
-        stock = StockService.get_stock_entry(magasin_id, produit.id)
-        details.append({
-            "produit": produit,
-            "quantite": quantite,
-            "stock_dispo": stock.quantite if stock else 0,
-            "total": quantite * produit.prix,
-        })
-
-    total_panier = sum(item["total"] for item in details)
-
-    magasin = Magasin.objects.get(id=magasin_id)
-    produits_disponibles = StockService.get_produits_disponibles(
-        magasin_id
-    )
-
     return render(request, "panier.html", {
-        "details": details,
-        "total_panier": total_panier,
-        "magasin": magasin,
-        "magasin_id": magasin_id,
-        "produits_disponibles": produits_disponibles,
+        "magasin_id": magasin_id
     })
 
 

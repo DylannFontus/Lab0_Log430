@@ -12,10 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 import sys
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+SWAGGER_USE_COMPAT_RENDERERS = False
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -26,7 +27,7 @@ SECRET_KEY = "django-insecure-f=e=onv(2*8d%(3gt-76eetu3wo74u6!uhk9cw8e!y)2c2$2^b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'web']
+ALLOWED_HOSTS = ['10.194.32.186', 'localhost', '127.0.0.1', '[::1]', 'web']
 
 
 # Application definition
@@ -38,7 +39,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'magasin',
+    "rest_framework",
+    "corsheaders",
+    "drf_yasg",
+    "magasin",
 ]
 
 MIDDLEWARE = [
@@ -49,6 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "pos_django.urls"
@@ -138,3 +143,32 @@ if 'pytest' in sys.argv or 'test' in sys.argv:
             'NAME': ':memory:',
         }
     }
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ["GET", "POST", "OPTIONS", "PUT", "DELETE"]
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Authorization', 'Content-Type'
+]
+
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'TokenAuth': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Token statique : `Token <token>`',
+        }
+    },
+}

@@ -51,6 +51,8 @@ jobs:
             echo "Waiting for MySQL..."
             sleep 2
           done
+      - name: Run database setup command
+        run: docker compose exec web python manage.py test_db
 
       - name: Run tests inside the app container
         run: docker compose exec web pytest
