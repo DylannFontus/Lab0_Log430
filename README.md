@@ -6,6 +6,17 @@ Lab0_Log430 est une application de gestion de point de vente (POS) développée 
 
 ---
 
+## Preuve Swagger
+![Image de la pipeline terminé](Images/LAB3/PreuveSwagger.png)
+![Image de la pipeline terminé](Images/LAB3/PreuveSwagger2.png)
+
+---
+
+## Preuve Redoc
+![Image de la pipeline terminé](Images/LAB3/PreuveRedoc.png)
+
+---
+
 ## Instructions de démarrage
 
 ### Prérequis
@@ -102,16 +113,6 @@ Lab0_Log430/
 ```
 ---
 
-## Preuve Swagger
-![Image de la pipeline terminé](Images/LAB3/PreuveSwagger.png)
-![Image de la pipeline terminé](Images/LAB3/PreuveSwagger2.png)
----
-
-
-## Preuve Redoc
-![Image de la pipeline terminé](Images/LAB3/PreuveRedoc.png)
----
-
 ## Pipeline CI/CD
 
 Le projet intègre une pipeline CI/CD via GitHub Actions :
@@ -119,6 +120,6 @@ Le projet intègre une pipeline CI/CD via GitHub Actions :
 - Tests automatiques avec pytest
 - Build et push d’image Docker
 
-![Image de la pipeline terminé](Images/LAB2/Etape1PipelineCICDRéussiLAB2.png)
+![Image de la pipeline terminé](Images/LAB2/PipelineCICDRéussiLAB3.png)
 ---
 
