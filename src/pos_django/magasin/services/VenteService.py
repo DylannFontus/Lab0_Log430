@@ -1,5 +1,5 @@
 from django.db import transaction
-from django.db.models import F, Sum
+from django.db.models import F, Sum, FloatField
 from ..models import Vente, VenteProduit, Produit, Stock, Magasin
 from django.utils.timezone import now, timedelta
 
@@ -8,14 +8,12 @@ def creer_vente(panier: dict, magasin_id: int) -> float:
     total = 0
     produits_ids = [int(pid) for pid in panier.keys()]
     
-    # Verrouillage des produits et stocks pour éviter les problèmes de concurrence
     produits = Produit.objects.select_for_update().filter(id__in=produits_ids)
     stocks = Stock.objects.select_for_update().filter(magasin_id=magasin_id, produit_id__in=produits_ids)
     
     produit_dict = {str(p.id): p for p in produits}
     stock_dict = {str(s.produit_id): s for s in stocks}
 
-    # Calcul du total et vérification des stocks
     for produit_id_str, quantite in panier.items():
         produit = produit_dict.get(produit_id_str)
         stock = stock_dict.get(produit_id_str)
@@ -43,7 +41,7 @@ def creer_vente(panier: dict, magasin_id: int) -> float:
             prix_unitaire=produit.prix
         ))
 
-        # Mise à jour du stock avec F() pour éviter les conditions de course
+        # Mise à jour du stock
         stock.quantite = F('quantite') - quantite
         stock.save()
 
@@ -53,9 +51,6 @@ def creer_vente(panier: dict, magasin_id: int) -> float:
 
 @transaction.atomic
 def annuler_vente(magasin_id: int, vente_id: int):
-    """
-    Annule une vente : supprime la vente et remet les produits dans le stock.
-    """
     vente = Vente.objects.select_for_update().get(id=vente_id, magasin_id=magasin_id)
     vente_produits = VenteProduit.objects.select_related('produit').filter(vente=vente)
 
@@ -122,3 +117,13 @@ def get_dashboard_stats():
         "surstock": list(surstock),
         "ventes_hebdo": list(ventes_hebdo),
     }
+
+def get_ventes_pour_maison_mere(maison_id: int) -> list[dict]:
+    qs = (
+        Vente.objects
+        .filter(magasin__type='magasin')
+        .values('magasin__id', 'magasin__nom')
+        .annotate(montant=Sum('total', output_field=FloatField()))
+        .order_by('-montant')
+    )
+    return list(qs)

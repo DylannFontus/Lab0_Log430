@@ -1,4 +1,4 @@
-# Lab3_Log430
+# Lab4_Log430
 
 ## Description
 
@@ -7,12 +7,14 @@ Lab0_Log430 est une application de gestion de point de vente (POS) développée 
 ---
 
 ## Preuve Swagger
+lien : [http://10.194.32.186:5000/swagger](http://10.194.32.186:5000/swagger)
 ![Image de la pipeline terminé](Images/LAB3/PreuveSwagger.png)
 ![Image de la pipeline terminé](Images/LAB3/PreuveSwagger2.png)
 
 ---
 
 ## Preuve Redoc
+lien : [http://10.194.32.186:5000/redoc](http://10.194.32.186:5000/redoc)
 ![Image de la pipeline terminé](Images/LAB3/PreuveRedoc.png)
 
 ---
@@ -75,17 +77,26 @@ docker compose exec web pytest
 ```
 Lab0_Log430/
 ├── Dockerfile
+├── k6_files
+│   ├── load_test.js
+│   └── test_consultation_stocks.js
+├── nginx.conf
+├── Prometheus
+│   └── prometheus.yml
 ├── Images
 │   ├── Lab0
 │   │   ├── PipelineCICDRéussi.png
 │   │   └── PipelineCICDRéussi2.png
 │   ├── LAB2
 │   │   └── Etape1PipelineCICDRéussiLAB2.png
-│   └── LAB3
-│       ├── RedocPreuve.png
-│       ├── SwaggerPreuve.png
-│       ├── SwaggerPreuve2.png
-│       └── PipelineCICDRéussiLAB3.png
+│   ├── LAB3
+│   │   ├── RedocPreuve.png
+│   │   ├── SwaggerPreuve.png
+│   │   ├── SwaggerPreuve2.png
+│   │   └── PipelineCICDRéussiLAB3.png
+│   └── LAB4
+│       ├── graphana.png
+│       └── prometheusTargets.png
 ├── README.md
 ├── __pycache__
 │   ├── HelloWorld.cpython-312.pyc

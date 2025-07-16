@@ -4,6 +4,10 @@ node "Poste Utilisateur" as client {
     artifact "navigateur web"
 }
 
+node "NGINX" as nginx {
+    artifact "nginx.conf"
+}
+
 node "Serveur Django (POS)" as app {
     artifact "views.py"
     artifact "urls.py"
@@ -14,6 +18,7 @@ node "Serveur Django (POS)" as app {
     artifact "services/ProduitService.py"
     artifact "services/VenteService.py"
     artifact "services/StockService.py"
+    artifact "services/PanierService.py"
     artifact "asgi.py"
     artifact "wsgi.py"
     artifact "settings.py"
@@ -26,8 +31,26 @@ node "Serveur Tests" as test {
 
 database "Base de données\nMySQL" as db
 
-client --> app : Requêtes HTTP (interface web)
+node "Prometheus" as prometheus {
+    artifact "Prometheus/prometheus.yml"
+}
+
+node "Grafana" as grafana
+
+node "Redis" as redis
+
+node "k6" as k6 {
+    artifact "k6_files/load_test.js"
+    artifact "k6_files/test_consultation_stocks.js"
+}
+
+client --> nginx : Requêtes HTTP (interface web)
+nginx --> app : Proxy pass (trafic HTTP, /metrics)
 app --> db : ORM Django (SQL)
+app --> redis : Cache/session
 test --> app : Appels Django TestCase
+prometheus --> app : Scrape /metrics
+grafana --> prometheus : Requêtes métriques
+k6 --> nginx : Tests de charge (HTTP)
 
 @enduml

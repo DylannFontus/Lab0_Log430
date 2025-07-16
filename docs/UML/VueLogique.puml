@@ -40,6 +40,7 @@ package "services" {
     class ProduitService
     class StockService
     class VenteService
+    class PanierService
 }
 
 ' Relations entre modèles
