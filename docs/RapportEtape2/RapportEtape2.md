@@ -1,7 +1,7 @@
 # Rapport d’Architecture – Lab 3, 4, 5 (Dylann André Fontus)
 
 ## Répertoire GitHub Lab 3: https://github.com/DylannFontus/Lab0_Log430/tree/Lab3FinalRelease
-## Répertoire GitHub Lab 4: https://github.com/DylannFontus/Lab0_Log430/tree/Lab4FinalRelease
+## Répertoire GitHub Lab 4: https://github.com/DylannFontus/Lab0_Log430/tree/Lab4IncompleteRelease
 ## Répertoire GitHub Lab 5: Inexistant
 
 ---
