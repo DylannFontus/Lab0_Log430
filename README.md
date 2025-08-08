@@ -1,5 +1,9 @@
 # Lab4_Log430
 
+# INFO IMPORTANTE
+
+Dû au fait que j'ai eu des problèmes durant mon lab en terme de d'erreurs et de mauvaises metrics, je n'ai pas pu finir le laboratoire 4. Ceal étant dit, j'ai fait un document qui explique vaguement ce que j'aurais fait si j'avais pu faire les autres labs dans docs/RapportEtape3/HypotheticalLAB5-6-7.md ainsi que deux ADR sur les technologies que j,aurais utilisés dans docs/ADR/ADR4.md et docs/ADR/ADR5.md.
+
 ## Description
 
 Lab0_Log430 est une application de gestion de point de vente (POS) développée en Python avec le framework Django. Elle permet de gérer les magasins, les produits, les ventes, les stocks et propose une interface web moderne. Le projet est conçu pour être facilement déployé et testé grâce à Docker et à une architecture modulaire.
@@ -8,14 +12,14 @@ Lab0_Log430 est une application de gestion de point de vente (POS) développée 
 
 ## Preuve Swagger
 lien : [http://10.194.32.186:5000/swagger](http://10.194.32.186:5000/swagger)
-![Image de la pipeline terminé](Images/LAB3/PreuveSwagger.png)
-![Image de la pipeline terminé](Images/LAB3/PreuveSwagger2.png)
+![Image de la pipeline terminé](Images/LAB3/SwaggerPreuve.png)
+![Image de la pipeline terminé](Images/LAB3/SwaggerPreuve2.png)
 
 ---
 
 ## Preuve Redoc
 lien : [http://10.194.32.186:5000/redoc](http://10.194.32.186:5000/redoc)
-![Image de la pipeline terminé](Images/LAB3/PreuveRedoc.png)
+![Image de la pipeline terminé](Images/LAB3/RedocPreuve.png)
 
 ---
 
@@ -131,6 +135,6 @@ Le projet intègre une pipeline CI/CD via GitHub Actions :
 - Tests automatiques avec pytest
 - Build et push d’image Docker
 
-![Image de la pipeline terminé](Images/LAB2/PipelineCICDRéussiLAB3.png)
+![Image de la pipeline terminé](Images/LAB3/PipelineCICDRéussiLAB3.png)
 ---
 

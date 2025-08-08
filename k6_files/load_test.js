@@ -41,18 +41,18 @@ const getHeaders = {
 // Scenario: Mise à jour d'un produit
 export function updateProduct() {
   const produitId = 1;
-  const url = `http://localhost:5000/api/produits/${produitId}/`;
+  const url = `http://10.194.32.186:5000/api/produits/${produitId}/`;
   const payload = JSON.stringify({
-    nom: 'Produit Modifié K6',
-    prix: 15.99,
-    description: 'Mise à jour via K6',
+    nom: 'Produit',
+    prix: 12,
+    description: 'hello',
   });
   const res = http.put(url, payload, authHeaders);
   check(res, {
     'status is 200': (r) => r.status === 200,
-    'nom mis à jour': (r) => r.status === 200 && r.json('nom') === 'Produit Modifié K6',
-    'prix mis à jour': (r) => r.status === 200 && parseFloat(r.json('prix')) === 15.99,
-    'description mise à jour': (r) => r.status === 200 && r.json('description') === 'Mise à jour via K6',
+    'nom mis à jour': (r) => r.status === 200 && r.json('nom') === 'Produit',
+    'prix mis à jour': (r) => r.status === 200 && parseFloat(r.json('prix')) === 12,
+    'description mise à jour': (r) => r.status === 200 && r.json('description') === 'hello',
   });
   sleep(0.05);
 }
@@ -60,7 +60,7 @@ export function updateProduct() {
 // Scenario: Génération du rapport de la maison mère
 export function generateReport() {
   const magasinId = 7;
-  const url = `http://localhost:5000/api/maison_mere/${magasinId}/tableau_de_bord/`;
+  const url = `http://10.194.32.186:5000/api/maison_mere/${magasinId}/tableau_de_bord/`;
   const res = http.get(url, getHeaders);
   let body = {};
   if (res.status === 200) {
@@ -82,7 +82,7 @@ export function generateReport() {
 export function consultStock() {
   const magasins = [1, 2, 3];
   magasins.forEach((id) => {
-    const url = `http://localhost:5000/api/stocks/?magasin_id=${id}`;
+    const url = `http://10.194.32.186:5000/api/stocks/?magasin_id=${id}`;
     const res = http.get(url, getHeaders);
     let body = null;
     if (res.status === 200) {

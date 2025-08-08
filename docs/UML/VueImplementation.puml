@@ -13,7 +13,6 @@ package "services" {
     class ProduitService
     class StockService
     class VenteService
-    class PanierService
 }
 
 package "views" {

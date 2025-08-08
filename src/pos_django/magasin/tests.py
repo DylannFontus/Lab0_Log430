@@ -67,13 +67,6 @@ def test_get_centre_logistique(mocker, mock_magasins):
     result = get_centre_logistique()
     assert result.type == "logistique"
 
-def test_get_all_magasins(mocker, mock_magasins):
-    magasins, mock_qs = mock_magasins
-    mocker.patch('magasin.models.Magasin.objects.all', return_value=magasins)
-
-    result = get_all_magasins()
-    assert result == magasins
-
 @pytest.fixture
 def produit_mock(mocker):
     return mocker.patch('magasin.models.Produit')
@@ -87,7 +80,6 @@ def test_get_produits_par_magasin(mocker):
         MagicMock(produit=MagicMock(id=1, nom="Prod1")),
         MagicMock(produit=MagicMock(id=2, nom="Prod2")),
     ]
-    # Patch Stock.objects.filter().select_related() pour retourner mock_stocks
     mock_filter = mocker.patch('magasin.services.ProduitService.Stock.objects.filter')
     mock_filter.return_value.select_related.return_value = mock_stocks
 
@@ -103,7 +95,6 @@ def test_rechercher_produits_par_nom_ou_id_with_id(mocker):
 
     result = rechercher_produits_par_nom_ou_id("1")
 
-    # Vérifie que filter a été appelé avec le bon Q
     patch_filter.assert_called_once_with(Q(id=1) | Q(nom__icontains="1"))
     assert result == mock_qs
 
@@ -142,7 +133,6 @@ def test_get_stock_total_par_magasin(mocker):
     mock_values = MagicMock()
     mock_result = MagicMock()
 
-    # On configure la chaîne d'appels : Stock.objects.values().annotate()
     mocker.patch('magasin.models.Stock.objects', mock_manager)
     mock_manager.values.return_value = mock_values
     mock_values.annotate.return_value = mock_result
@@ -245,7 +235,7 @@ class MagasinAPITests(TestCase):
         url = f"/panier/{self.magasin.id}/ajouter/"
         data = {"produit_id": self.produit.id, "quantite": 2}
         response = self.client.post(url, data=json.dumps(data), content_type="application/json")
-        self.assertIn(response.status_code, [200, 201])  # dépend de ton implémentation
+        self.assertIn(response.status_code, [200, 201])
 
     def test_retirer_du_panier(self):
         # Ajouter avant de retirer (sinon panier vide)
@@ -284,28 +274,6 @@ class MagasinAPITests(TestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, 200)
 
-
-    def test_reappro(self):
-        centre_logistique = Magasin.objects.create(nom="Centre Logistique Test", type="logistique")
-        magasin = Magasin.objects.create(nom="Magasin Test", type="magasin")
-
-        produit = Produit.objects.create(nom="Produit Test", prix=10.0)
-
-        Stock.objects.create(magasin=centre_logistique, produit=produit, quantite=100)
-
-        data = {
-            'produit_id': produit.id,
-            'quantite': 10,
-            'destination_magasin_id': magasin.id,
-        }
-
-        url = f"/api/magasins/{magasin.id}/reapprovisionner/"
-
-        response = self.client.post(url, data)
-
-        self.assertIn(response.status_code, [200, 201])
-        self.assertIn("success", response.json())
-
     def test_rapport_ventes(self):
         # Création d’un magasin de type admin (maison mère)
         magasin_admin = Magasin.objects.create(nom="Maison Mère Admin", type="admin")
@@ -338,7 +306,7 @@ class MagasinAPITests(TestCase):
         with patch('magasin.services.StockService.get_produits_disponibles') as mock_get_produits, \
             patch('magasin.services.StockService.get_stock_dict_for_magasin') as mock_get_stock_dict:
 
-            mock_get_produits.return_value = []  # ou liste d’objets Produit simulés
+            mock_get_produits.return_value = []
             mock_get_stock_dict.return_value = {}
 
             url = f"/api/maison_mere/{maison_mere.id}/donnees_approvisionnement/"

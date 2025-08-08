@@ -18,7 +18,6 @@ node "Serveur Django (POS)" as app {
     artifact "services/ProduitService.py"
     artifact "services/VenteService.py"
     artifact "services/StockService.py"
-    artifact "services/PanierService.py"
     artifact "asgi.py"
     artifact "wsgi.py"
     artifact "settings.py"

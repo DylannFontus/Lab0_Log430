@@ -13,9 +13,8 @@ export default function () {
 
   const magasins = [1, 2, 3];
   magasins.forEach((id) => {
-    const url = `http://localhost:5000/api/stocks/?magasin_id=${id}`;
+    const url = `http://10.194.32.186:5000/api/stocks/?magasin_id=${id}`;
     const res = http.get(url, { headers });
-    // Initialize body to null to handle potential parsing errors
     let body = null;
     if (res.status === 200) {
       try {
